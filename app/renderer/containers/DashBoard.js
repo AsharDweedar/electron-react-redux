@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
-import DashBoard from '../components/DashBoard';
+import DashBoard from '../pages/DashBoard';
 import userActions from '../actions/user';
 
 const mapStateToProps = (state) => {

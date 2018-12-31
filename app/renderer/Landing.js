@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Routes from './containers/routes'
 import Header from './containers/Header'
+import Tail from './containers/Tail'
 
 export default class Landing extends Component {
   componentDidMount () {
@@ -11,7 +12,11 @@ export default class Landing extends Component {
     return (
       <div>
         <Header />
+        <hr></hr>
         {Routes}
+        <hr></hr>
+        <Tail />
+        <hr></hr>
       </div>
     )
   }

@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
-import Login from '../components/Login';
+import Login from '../pages/Login';
 import userActions from '../actions/user';
 
 const mapStateToProps = (state) => {
@@ -12,8 +12,11 @@ const mapDispatchToProps = (dispatch) => {
   const user = bindActionCreators(userActions, dispatch);
   return {
     onLogin: (data) => {
-      user.login(data);
-      dispatch(push('/loggedin'));
+      if(user.login(data)) {
+        dispatch(push('/dashboard'));
+      } else {
+        alert('error: invalid name or password')
+      }
     },
   };
 };
