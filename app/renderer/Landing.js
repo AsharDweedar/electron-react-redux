@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import NavBar from './containers/NavBar'
-import Header from './components/Header'
+import Routes from './containers/routes'
+import Header from './containers/Header'
 
 export default class Landing extends Component {
   componentDidMount () {
@@ -11,7 +11,7 @@ export default class Landing extends Component {
     return (
       <div>
         <Header />
-        {NavBar}
+        {Routes}
       </div>
     )
   }

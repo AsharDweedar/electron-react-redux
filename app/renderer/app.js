@@ -25,7 +25,7 @@ const rootElement = document.querySelector(
 ReactDOM.render(
   <Provider store={store}>
     <ConnectedRouter history={routerHistory}>
-      <Landing dispatch={store.liftedStore.dispatch} />
+      <Landing />
     </ConnectedRouter>
   </Provider>,
   rootElement

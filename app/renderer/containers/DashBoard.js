@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
 import { bindActionCreators } from 'redux';
-import LoggedIn from '../components/LoggedIn';
+import DashBoard from '../components/DashBoard';
 import userActions from '../actions/user';
 
 const mapStateToProps = (state) => {
@@ -21,4 +21,4 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LoggedIn);
+)(DashBoard);

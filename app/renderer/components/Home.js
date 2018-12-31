@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 export default class Home extends Component {
   componentDidMount () {
+    console.log("this is home")
     console.log(this.props)
   }
   render () {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-export default class LoggedIn extends Component {
+export default class DashBoard extends Component {
   static propTypes = {
     onLogout: PropTypes.func.isRequired,
   };
@@ -9,7 +9,7 @@ export default class LoggedIn extends Component {
   handleLogout = () => {
     this.props.onLogout({
       username: '',
-      loggedIn: false,
+      DashBoard: false,
     });
   };
 
