@@ -13,7 +13,7 @@ const syncHistoryWithStore = (store, history) => {
   }
 }
 
-const initialState = {}
+const initialState = { user: { username: "ashar as default user", loggedIn: true } }
 const routerHistory = createMemoryHistory()
 const store = configureStore(initialState, routerHistory)
 syncHistoryWithStore(store, routerHistory)

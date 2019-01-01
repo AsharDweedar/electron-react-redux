@@ -10,13 +10,12 @@ export default class Landing extends Component {
   }
   render () {
     return (
-      <div>
+      <div style={{border: '5px dotted green'}}>
         <Header />
         <hr></hr>
         {Routes}
         <hr></hr>
         <Tail />
-        <hr></hr>
       </div>
     )
   }

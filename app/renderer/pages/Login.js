@@ -6,9 +6,7 @@ export default class Login extends Component {
     onLogin: PropTypes.func.isRequired,
   };
 
-  state = {
-    username: '',
-  };
+  state = this.props.user
 
   handleLogin = () => {
     this.props.onLogin({
@@ -25,11 +23,13 @@ export default class Login extends Component {
 
   render() {
     return (
-      <div>
-        <h2>Login</h2>
-        <input onChange={this.handleChange} type="text" value={this.state.username} />
-        <button onClick={this.handleLogin}>Log In</button>
-      </div>
+      <p>
+        <div style={{ margin: 'auto', display: 'block' }}>
+          <h2>Login</h2>
+          <input onChange={this.handleChange} type="text" value={this.state.username} />
+          <button onClick={this.handleLogin}>Log In</button>
+        </div>
+      </p>
     );
   }
 }

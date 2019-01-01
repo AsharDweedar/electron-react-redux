@@ -3,6 +3,8 @@ import { push } from 'connected-react-router';
 import Header from '../pages/Header';
 
 const mapStateToProps = (state) => {
+    console.log('state in header smart component mapStateToProps')
+    console.log(state)
     return state;
 };
 

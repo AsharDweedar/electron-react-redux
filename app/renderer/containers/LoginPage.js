@@ -5,6 +5,8 @@ import Login from '../pages/Login';
 import userActions from '../actions/user';
 
 const mapStateToProps = (state) => {
+  console.log("this is login state")
+  console.log(state)
   return state;
 };
 

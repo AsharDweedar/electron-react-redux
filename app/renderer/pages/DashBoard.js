@@ -8,8 +8,8 @@ export default class DashBoard extends Component {
 
   handleLogout = () => {
     this.props.onLogout({
-      username: '',
-      DashBoard: false,
+      username: 'not logged in',
+      loggedIn: false,
     });
   };
 
