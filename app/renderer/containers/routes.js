@@ -13,7 +13,7 @@ import LoginPage from './LoginPage';
 import Exams from '../pages/Exams';
 import Lectures from '../pages/Lectures';
 import Subjects from '../pages/Subjects';
-import Recomended from '../pages/Recomended';
+import Recommended from '../pages/Recommended';
 import QA from '../pages/QA';
 
 export default (
@@ -28,7 +28,7 @@ export default (
         <Route exact path="/exams" component={Exams} />
         <Route exact path="/lectures" component={Lectures} />
         <Route exact path="/subjects" component={Subjects} />
-        <Route exact path="/recomended" component={Recomended} />
+        <Route exact path="/recommended" component={Recommended} />
         <Route exact path="/q_a" component={QA} />
     </Switch>
 );

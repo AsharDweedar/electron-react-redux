@@ -7,31 +7,29 @@ export default class Header extends Component {
     console.log(this.props)
   }
   render() {
-    const router = this.props.router
-    return (
-      <div>
-        <div style={{ width: '48%', border: '2px solid black', float: 'left' }}>
-          <ul style={{ border: '2px solid red' }}>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/') }.bind(this)}>HOME</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/dashboard') }.bind(this)}>DASHBOARD</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/about') }.bind(this)}>ABOUT</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/faq') }.bind(this)}>FAQ</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/help') }.bind(this)}>HELP</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/policy') }.bind(this)}>OUR POLICY</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/login') }.bind(this)}>LOGIN</li>
-          </ul>
-        </div>
-        <div style={{ width: '48%', border: '2px solid black', float: 'right' }}>
+    const router = (e) => this.props.router(e.target.data('route'))
+    return <div>
+        <div style={{ border: '2px dotted red' }}>
+          {/* <div style={{ width: '48%', border: '2px solid black', float: 'left' }}> */}
           <ul style={{ border: '2px dashed red' }}>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/exams') }.bind(this)}>Exams</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/lectures') }.bind(this)}>LECTURES</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/subjects') }.bind(this)}>SUBJECTS</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/recomended') }.bind(this)}>RECOMENDED RESOURCES</li>
-            <li style={{ border: '2px solid red' }} onClick={function () { router('/q_a') }.bind(this)}>Q&A</li>
+            <li data-route={'/'} onClick={router}>HOME</li>
+            <li data-route={'/dashboard'} onClick={router}>DASHBOARD</li>
+            <li data-route={'/about'} onClick={router}>ABOUT</li>
+            <li data-route={'/faq'} onClick={router}>FAQ</li>
+            <li data-route={'/help'} onClick={router}>HELP</li>
+            <li data-route={'/policy'} onClick={router}>OUR POLICY</li>
+            <li data-route={'/login'} onClick={router}>LOGIN</li>
+          </ul>
+          {/* <div style={{ width: '48%', border: '2px solid black', float: 'right' }}> */}
+          <ul style={{ border: '2px dashed red' }}>
+            <li data-route={'/exams'} onClick={router}>Exams</li>
+            <li data-route={'/lectures'} onClick={router}>LECTURES</li>
+            <li data-route={'/subjects'} onClick={router}>SUBJECTS</li>
+            <li data-route={'/recommended'} onClick={router}>RECOMMENDED RESOURCES</li>
+            <li data-route={'/q_a'} onClick={router}>Q&A</li>
           </ul>
         </div>
         <User />
-      </div>
-    )
+      </div>;
   }
 }

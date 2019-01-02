@@ -6,9 +6,10 @@ export default class User extends Component {
     console.log(this.props)
   }
   render() {
-    const router = this.props.router
+    // const router = this.props.router
     return (
-      <div style={{ border: '3px dotted green', hight: '50px', width: '30%', float: 'right' }}>
+      // <div style={{ border: '3px dotted green', hight: '50px', width: '30%', float: 'right' }}>
+      <div style={{ border: '3px dotted green', hight: '50px'}}>
         <ul>
           <li>points: 5</li>
           <li>thunbnail: Link</li>
