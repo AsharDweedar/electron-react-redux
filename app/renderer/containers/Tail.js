@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import Tail from '../pages/Tail';
+import Tail from '../components/Tail';
 
 const mapStateToProps = (state) => {
     return state;

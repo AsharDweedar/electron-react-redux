@@ -5,6 +5,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import { createMemoryHistory } from 'history'
 import Landing from './Landing'
 import configureStore from './store'
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const syncHistoryWithStore = (store, history) => {
   const { router } = store.getState()

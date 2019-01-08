@@ -1,20 +1,33 @@
 <!DOCTYPE html>
 <html>
+
+<head>
+  <title>My App</title>
+  <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" /> -->
+
   <head>
-    <title>My App</title>
-    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" /> -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
   </head>
-  <body>
-    <div id="app"></div>
-    <script src="./app.js" data-container="#app"></script>
-    <script>
-      if (process.env.BROWSER_SYNC_CLIENT_URL) {
-        const current = document.currentScript;
-        const script = document.createElement('script');
-        script.src = process.env.BROWSER_SYNC_CLIENT_URL;
-        script.async = true;
-        current.parentNode.insertBefore(script, current);
-      }
-    </script>
-  </body>
+
+<body>
+  <script src="./helpers/hammer.js" onload="window.Hammer = module.exports;"></script>
+  <!-- <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script> -->
+  <script src="../../node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <!-- <script src="path/to/your/bundle.js"></script> -->
+
+  <div id="app"></div>
+  <script src="./app.js" data-container="#app"></script>
+  <script>
+    if (process.env.BROWSER_SYNC_CLIENT_URL) {
+      const current = document.currentScript;
+      const script = document.createElement('script');
+      script.src = process.env.BROWSER_SYNC_CLIENT_URL;
+      script.async = true;
+      current.parentNode.insertBefore(script, current);
+    }
+  </script>
+</body>
+
 </html>

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import { push } from 'connected-react-router';
-import Header from '../pages/Header';
+import Header from '../components/Header';
 
 const mapStateToProps = (state) => {
     console.log('state in header smart component mapStateToProps')
