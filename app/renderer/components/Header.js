@@ -10,7 +10,7 @@ export default class Header extends Component {
   }
   render() {
     const router = (path) => this.props.router(path)
-    let loggedIn = false;
+    let loggedIn = !this.props.user.loggedIn;
     return (<div>
       <Navbar brand='logo' right>
         <NavItem onClick={() => router('/')}><Icon>home</Icon></NavItem>
@@ -19,9 +19,9 @@ export default class Header extends Component {
         <NavItem onClick={() => router('/help')}><Icon>help</Icon></NavItem>
         <NavItem onClick={() => router('/policy')}><Icon>vpn_lock</Icon></NavItem>
 
-        {loggedIn ? <NavItem><Icon>more_vert</Icon></NavItem> : <Dropdown trigger={
-            <NavItem onClick={() => router('/login')}><Icon>vpn_key</Icon></NavItem>
-          }>
+        {loggedIn ? <NavItem><Icon>vpn_key</Icon></NavItem> : <Dropdown trigger={
+          <NavItem onClick={() => router('/login')}><Icon>more_vert</Icon></NavItem>
+        }>
           <NavItem>My Profile</NavItem>
           <NavItem onClick={() => router('/dashboard')}>Dashboard</NavItem>
           <NavItem divider />

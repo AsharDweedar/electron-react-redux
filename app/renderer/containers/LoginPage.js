@@ -14,7 +14,8 @@ const mapDispatchToProps = (dispatch) => {
   const user = bindActionCreators(userActions, dispatch);
   return {
     onLogin: (data) => {
-      if(user.login(data)) {
+      user.login(data)
+      if(data.username !== "0") {
         dispatch(push('/dashboard'));
       } else {
         alert('error: invalid name or password')
