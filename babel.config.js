@@ -11,6 +11,7 @@ module.exports = {
     '@babel/preset-react',
   ],
   plugins: [
+    ['import-static-files'],
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
   ],

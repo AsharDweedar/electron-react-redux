@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/register": "^7.0.0",
     "@material-ui/core": "^3.7.1",
+    "babel-plugin-import-static-files": "^1.0.4",
     "connected-react-router": "^5.0.1",
     "history": "^4.6.3",
     "jquery": "^2.1.1",

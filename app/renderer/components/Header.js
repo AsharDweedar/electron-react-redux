@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 // import User from './User'
 import { Navbar, NavItem, Icon, Dropdown } from 'react-materialize'
 import PropTypes from 'prop-types'
+import Logo from '../helpers/logo.jpg'
 
 export default class Header extends Component {
   static propTypes = {
-    onLogout: PropTypes.func.isRequired
+    onLogout: PropTypes.func.isRequired,
+    router: PropTypes.func.isRequired
   }
 
   componentDidMount () {
@@ -21,12 +23,15 @@ export default class Header extends Component {
   }
 
   render () {
+    const Img = <img src={Logo} alt={'logo'} />
+    console.log(Logo)
+    console.log("Logo")
     const router = path => this.props.router(path)
     const logout = this.handleLogout.bind(this)
     let loggedIn = !this.props.user.loggedIn
     return (
       <div>
-        <Navbar brand='logo' right>
+        <Navbar brand={Img} className="black" right>
           <NavItem onClick={() => router('/')}>
             <Icon>home</Icon>
           </NavItem>
