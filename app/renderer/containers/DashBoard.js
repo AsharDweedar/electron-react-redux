@@ -1,24 +1,15 @@
-import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
-import { bindActionCreators } from 'redux';
-import DashBoard from '../pages/DashBoard';
-import userActions from '../actions/user';
+import { connect } from 'react-redux'
+import DashBoard from '../pages/DashBoard'
 
-const mapStateToProps = (state) => {
-  return state;
-};
+const mapStateToProps = state => {
+  return state
+}
 
-const mapDispatchToProps = (dispatch) => {
-  const user = bindActionCreators(userActions, dispatch);
-  return {
-    onLogout: (data) => {
-      user.logout(data);
-      dispatch(push('/'));
-    },
-  };
-};
+const mapDispatchToProps = dispatch => {
+  return {}
+}
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
-)(DashBoard);
+  mapDispatchToProps
+)(DashBoard)

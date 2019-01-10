@@ -1,22 +1,30 @@
-import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
-import Header from '../components/Header';
+import { connect } from 'react-redux'
+import { push } from 'connected-react-router'
+import { bindActionCreators } from 'redux'
 
-const mapStateToProps = (state) => {
-    console.log('state in header smart component mapStateToProps')
-    console.log(state)
-    return state;
-};
+import Header from '../components/Header'
+import userActions from '../actions/user'
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        router: (rout) => {
-            dispatch(push(rout));
-        },
-    };
-};
+const mapStateToProps = state => {
+  console.log('state in header smart component mapStateToProps')
+  console.log(state)
+  return state
+}
+
+const mapDispatchToProps = dispatch => {
+  const user = bindActionCreators(userActions, dispatch)
+  return {
+    router: rout => {
+      dispatch(push(rout))
+    },
+    onLogout: data => {
+      user.logout(data)
+      dispatch(push('/'))
+    }
+  }
+}
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-)(Header);
+  mapStateToProps,
+  mapDispatchToProps
+)(Header)

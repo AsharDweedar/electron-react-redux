@@ -1,39 +1,71 @@
 import React, { Component } from 'react'
-import User from './User';
+// import User from './User'
 import { Navbar, NavItem, Icon, Dropdown } from 'react-materialize'
-
+import PropTypes from 'prop-types'
 
 export default class Header extends Component {
-  componentDidMount() {
+  static propTypes = {
+    onLogout: PropTypes.func.isRequired
+  }
+
+  componentDidMount () {
     console.log('this is header')
     console.log(this.props)
   }
-  render() {
-    const router = (path) => this.props.router(path)
-    let loggedIn = !this.props.user.loggedIn;
-    return (<div>
-      <Navbar brand='logo' right>
-        <NavItem onClick={() => router('/')}><Icon>home</Icon></NavItem>
-        <NavItem onClick={() => router('/about')}><Icon>portrait</Icon></NavItem>
-        <NavItem onClick={() => router('/faq')}><Icon>question_answer</Icon></NavItem>
-        <NavItem onClick={() => router('/help')}><Icon>help</Icon></NavItem>
-        <NavItem onClick={() => router('/policy')}><Icon>vpn_lock</Icon></NavItem>
 
-        {loggedIn ? <NavItem><Icon>vpn_key</Icon></NavItem> : <Dropdown trigger={
-          <NavItem onClick={() => router('/login')}><Icon>more_vert</Icon></NavItem>
-        }>
-          <NavItem>My Profile</NavItem>
-          <NavItem onClick={() => router('/dashboard')}>Dashboard</NavItem>
-          <NavItem divider />
-          <NavItem>logout</NavItem>
-        </Dropdown>}
-      </Navbar>
-    </div>)
+  handleLogout () {
+    this.props.onLogout({
+      username: 'not logged in',
+      loggedIn: false
+    })
+  }
+
+  render () {
+    const router = path => this.props.router(path)
+    const logout = this.handleLogout.bind(this)
+    let loggedIn = !this.props.user.loggedIn
+    return (
+      <div>
+        <Navbar brand='logo' right>
+          <NavItem onClick={() => router('/')}>
+            <Icon>home</Icon>
+          </NavItem>
+          <NavItem onClick={() => router('/about')}>
+            <Icon>portrait</Icon>
+          </NavItem>
+          <NavItem onClick={() => router('/faq')}>
+            <Icon>question_answer</Icon>
+          </NavItem>
+          <NavItem onClick={() => router('/help')}>
+            <Icon>help</Icon>
+          </NavItem>
+          <NavItem onClick={() => router('/policy')}>
+            <Icon>vpn_lock</Icon>
+          </NavItem>
+
+          {loggedIn ? (
+            <NavItem onClick={() => router('/login')}>
+              <Icon>vpn_key</Icon>
+            </NavItem>
+          ) : (
+            <Dropdown
+              trigger={
+                <NavItem>
+                  <Icon>more_vert</Icon>
+                </NavItem>
+              }
+            >
+              <NavItem>My Profile</NavItem>
+              <NavItem onClick={() => router('/dashboard')}>Dashboard</NavItem>
+              <NavItem divider />
+              <NavItem onClick={logout}>logout</NavItem>
+            </Dropdown>
+          )}
+        </Navbar>
+      </div>
+    )
   }
 }
-
-
-
 
 // export default class Header extends Component {
 //   componentDidMount() {
