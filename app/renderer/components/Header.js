@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
 // import User from './User'
-import { Navbar, NavItem, Icon, Dropdown } from 'react-materialize'
+import {
+  Navbar,
+  NavItem,
+  Icon,
+  Dropdown,
+  SideNav,
+  SideNavItem,
+  Button
+} from 'react-materialize'
 import PropTypes from 'prop-types'
 import Logo from '../helpers/logo.jpg'
 
@@ -23,15 +31,22 @@ export default class Header extends Component {
   }
 
   render () {
+    var hidden_triggerer = <Button style={{ display: 'none' }}>Hidden</Button>
+    var triggerer = (
+      <NavItem>
+        <Icon onClick={hidden_triggerer}>more_vert</Icon>
+      </NavItem>
+    )
+
     const Img = <img src={Logo} alt={'logo'} />
     console.log(Logo)
-    console.log("Logo")
+    console.log('Logo')
     const router = path => this.props.router(path)
     const logout = this.handleLogout.bind(this)
     let loggedIn = !this.props.user.loggedIn
     return (
       <div>
-        <Navbar brand={Img} className="black" right>
+        <Navbar brand={Img} className='black' right>
           <NavItem onClick={() => router('/')}>
             <Icon>home</Icon>
           </NavItem>
@@ -47,24 +62,48 @@ export default class Header extends Component {
           <NavItem onClick={() => router('/policy')}>
             <Icon>vpn_lock</Icon>
           </NavItem>
+          {triggerer}
 
           {loggedIn ? (
             <NavItem onClick={() => router('/login')}>
               <Icon>vpn_key</Icon>
             </NavItem>
           ) : (
-            <Dropdown
-              trigger={
-                <NavItem>
-                  <Icon>more_vert</Icon>
-                </NavItem>
-              }
+            <SideNav
+              trigger={hidden_triggerer}
+              options={{ closeOnClick: true }}
             >
-              <NavItem>My Profile</NavItem>
-              <NavItem onClick={() => router('/dashboard')}>Dashboard</NavItem>
-              <NavItem divider />
-              <NavItem onClick={logout}>logout</NavItem>
-            </Dropdown>
+              <SideNavItem
+                userView
+                user={{
+                  background: '../../../static/app/renderer/helpers/logo.jpg',
+                  image: '../../../static/app/renderer/helpers/logo.jpg',
+                  name: 'John Doe',
+                  email: 'jdandturk@gmail.com'
+                }}
+              />
+              <SideNavItem href='#!icon' icon='cloud'>
+                First Link With Icon
+              </SideNavItem>
+              <SideNavItem href='#!second'>Second Link</SideNavItem>
+              <SideNavItem divider />
+              <SideNavItem subheader>Subheader</SideNavItem>
+              <SideNavItem waves href='#!third'>
+                Third Link With Waves
+              </SideNavItem>
+            </SideNav>
+            // <Dropdown
+            //   trigger={
+            //     <NavItem>
+            //       <Icon>more_vert</Icon>
+            //     </NavItem>
+            //   }
+            // >
+            //   <NavItem onClick={() => router('/dashboard')}>My Profile</NavItem>
+            //   <NavItem onClick={() => router('/dashboard')}>Dashboard</NavItem>
+            //   <NavItem divider />
+            //   <NavItem onClick={logout}>logout</NavItem>
+            // </Dropdown>
           )}
         </Navbar>
       </div>
