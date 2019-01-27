@@ -29,7 +29,7 @@ class Demo3 extends React.Component {
           display: 'block',
           minHeight: '1px',
           width: '80%',
-          border: '15px solid #ddd',
+          border: '5px solid #ddd',
           overflow: 'auto',
           margin: 'auto'
         }}
@@ -38,6 +38,9 @@ class Demo3 extends React.Component {
           images={this.state.images}
           enableLightbox={false}
           enableImageSelection={false}
+          margin={15}
+          rowHeight={80}
+          onClickThumbnail={() => "HI"}
         />
       </div>
     )
@@ -47,12 +50,18 @@ class Demo3 extends React.Component {
 Demo3.propTypes = {
   images: PropTypes.arrayOf(
     PropTypes.shape({
-      src: PropTypes.string.isRequired,
+      src: PropTypes.string,
       thumbnail: PropTypes.string.isRequired,
       srcset: PropTypes.array,
       caption: PropTypes.string,
       thumbnailWidth: PropTypes.number.isRequired,
-      thumbnailHeight: PropTypes.number.isRequired
+      thumbnailHeight: PropTypes.number.isRequired,
+      tags: PropTypes.arrayOf(
+        PropTypes.shape({
+          value: PropTypes.string.required,
+          title: PropTypes.string
+        })
+      )
     })
   ).isRequired
 }
@@ -60,60 +69,100 @@ Demo3.propTypes = {
 Demo3.defaultProps = {
   images: [
     {
+      src: '',
       thumbnail:
-        'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
+        'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/links.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'back', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
     },
     {
+      src: '',
       thumbnail:
         'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
       thumbnailWidth: 10,
       thumbnailHeight: 10,
-      tags: [{value: "folder_name", title: "Name"}]
+      tags: [{ value: 'folder_name', title: 'Name' }]
+    },
+    {
+      src: '',
+      thumbnail:
+        'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
+      thumbnailWidth: 10,
+      thumbnailHeight: 10,
+      tags: [{ value: 'folder_name', title: 'Name' }]
+    },
+    {
+      src: '',
+      thumbnail:
+        'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
+      thumbnailWidth: 10,
+      thumbnailHeight: 10,
+      tags: [{ value: 'folder_name', title: 'Name' }]
+    },
+    {
+      src: '',
+      thumbnail:
+        'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
+      thumbnailWidth: 10,
+      thumbnailHeight: 10,
+      tags: [{ value: 'folder_name', title: 'Name' }]
+    },
+    {
+      src: '',
+      thumbnail:
+        'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png',
+      thumbnailWidth: 10,
+      thumbnailHeight: 10,
+      tags: [{ value: 'folder_name', title: 'Name' }]
     }
   ]
 }
