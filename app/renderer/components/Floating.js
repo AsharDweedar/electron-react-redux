@@ -11,14 +11,14 @@ import {
 import PropTypes from 'prop-types'
 import Logo from '../helpers/logo.jpg'
 
-export default class Header extends Component {
+export default class Floating extends Component {
   static propTypes = {
     onLogout: PropTypes.func.isRequired,
     router: PropTypes.func.isRequired
   }
 
   componentDidMount () {
-    console.log('this is header')
+    console.log('this is Floating')
     console.log(this.props)
   }
 
@@ -33,37 +33,49 @@ export default class Header extends Component {
     const router = path => this.props.router(path)
     const logout = this.handleLogout.bind(this)
     let loggedIn = !this.props.user.loggedIn
+    if (loggedIn) {
+      return (
+        <Button
+          floating
+          fab='horizontal'
+          icon='mode_edit'
+          className='red'
+          large
+          style={{ bottom: '45px', right: '24px' }}
+        >
+          <Button
+            floating
+            icon='publish'
+            className='green'
+            onClick={() => router('/login')}
+          />
+        </Button>
+      )
+    }
     return (
       <div>
-        {loggedIn ? (
-          <Icon>vpn_key</Icon>
-        ) : (
-          <SideNav
-            trigger={
-              <Button floating large className='red' waves='light' icon='add' />
-            }
-            options={{ closeOnClick: true }}
-          >
-            <SideNavItem
-              userView
-              user={{
-                background: '../../../static/app/renderer/helpers/logo.jpg',
-                image: '../../../static/app/renderer/helpers/logo.jpg',
-                name: 'John Doe',
-                email: 'jdandturk@gmail.com'
-              }}
-            />
-            <SideNavItem href='#!icon' icon='cloud'>
-              First Link With Icon
-            </SideNavItem>
-            <SideNavItem href='#!second'>Second Link</SideNavItem>
-            <SideNavItem divider />
-            <SideNavItem subheader>Subheader</SideNavItem>
-            <SideNavItem waves href='#!third'>
-              Third Link With Waves
-            </SideNavItem>
-          </SideNav>
-        )}
+        <Button
+          floating
+          fab='horizontal'
+          icon='mode_edit'
+          className='red'
+          large
+          style={{ bottom: '45px', right: '24px' }}
+        >
+          <Button floating icon='publish' className='green' onClick={logout} />
+          <Button
+            floating
+            icon='format_quote'
+            className='yellow darken-1'
+            onClick={() => router('/profile')}
+          />
+          <Button
+            floating
+            icon='insert_chart'
+            className='red'
+            onClick={() => router('/dashboard')}
+          />
+        </Button>
       </div>
     )
   }

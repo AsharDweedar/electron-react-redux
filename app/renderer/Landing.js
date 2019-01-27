@@ -11,7 +11,7 @@ export default class Landing extends Component {
   }
   render () {
     return (
-      <div style={{border: '5px dotted green'}}>
+      <div>
         <Header />
         <Floating/>
         {Routes}

@@ -7,6 +7,7 @@ import FAQ from '../pages/FAQ';
 import Help from '../pages/Help';
 import Policy from '../pages/Policy';
 import DashBoard from './DashBoard';
+import Profile from './Profile';
 
 import LoginPage from './LoginPage';
 
@@ -19,6 +20,7 @@ import QA from '../pages/QA';
 export default (
     <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/profile" component={Profile} />
         <Route exact path="/dashboard" component={DashBoard} />
         <Route exact path="/about" component={About} />
         <Route exact path="/faq" component={FAQ} />

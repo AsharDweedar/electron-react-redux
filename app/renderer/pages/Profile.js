@@ -12,14 +12,14 @@ import {
 import PropTypes from 'prop-types'
 import Logo from '../helpers/logo.jpg'
 
-export default class Header extends Component {
+export default class Profile extends Component {
   static propTypes = {
     onLogout: PropTypes.func.isRequired,
     router: PropTypes.func.isRequired
   }
 
   componentDidMount () {
-    console.log('this is header')
+    console.log('this is Profile')
     console.log(this.props)
   }
 
@@ -44,26 +44,6 @@ export default class Header extends Component {
     const router = path => this.props.router(path)
     const logout = this.handleLogout.bind(this)
     let loggedIn = !this.props.user.loggedIn
-    return (
-      <div>
-        <Navbar brand={Img} className='black' right>
-          <NavItem onClick={() => router('/')}>
-            <Icon>home</Icon>
-          </NavItem>
-          <NavItem onClick={() => router('/about')}>
-            <Icon>portrait</Icon>
-          </NavItem>
-          <NavItem onClick={() => router('/faq')}>
-            <Icon>question_answer</Icon>
-          </NavItem>
-          <NavItem onClick={() => router('/help')}>
-            <Icon>help</Icon>
-          </NavItem>
-          <NavItem onClick={() => router('/policy')}>
-            <Icon>vpn_lock</Icon>
-          </NavItem>
-        </Navbar>
-      </div>
-    )
+    return <div>user Profile</div>
   }
 }

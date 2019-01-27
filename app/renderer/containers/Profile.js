@@ -2,11 +2,11 @@ import { connect } from 'react-redux'
 import { push } from 'connected-react-router'
 import { bindActionCreators } from 'redux'
 
-import Floating from '../components/Floating'
+import Profile from '../pages/Profile'
 import userActions from '../actions/user'
 
 const mapStateToProps = state => {
-    console.log('state in Floating smart component mapStateToProps')
+    console.log('state in Profile smart component mapStateToProps')
     console.log(state)
     return state
 }
@@ -27,4 +27,4 @@ const mapDispatchToProps = dispatch => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Floating)
+)(Profile)
