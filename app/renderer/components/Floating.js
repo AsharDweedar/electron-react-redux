@@ -62,14 +62,25 @@ export default class Floating extends Component {
           large
           style={{ bottom: '45px', right: '24px' }}
         >
-          <Button floating icon='publish' className='green' onClick={logout} />
           <Button
+            floating
+            icon='publish'
+            tooltip='logout'
+            tooltipOptions={{"position": "top", "delay" : 10}}
+            className='green'
+            onClick={logout}
+          />
+          <Button
+            tooltip='profile'
+            tooltipOptions={{"position": "top", "delay" : 10}}
             floating
             icon='format_quote'
             className='yellow darken-1'
             onClick={() => router('/profile')}
           />
           <Button
+            tooltip='dashboard'
+            tooltipOptions={{"position": "top", "delay" : 10}}
             floating
             icon='insert_chart'
             className='red'

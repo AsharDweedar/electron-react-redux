@@ -9,7 +9,7 @@ export default class Tail extends Component {
   render () {
     const router = this.props.router
     return (
-      <div style={{"marginTop" : "50px"}}>
+      <div style={{ marginTop: '50px' }}>
         <Footer
           copyrights='&copy 2015 Copyright Text'
           moreLinks={
@@ -53,6 +53,7 @@ export default class Tail extends Component {
           <p className='grey-text text-lighten-4'>
             You can use rows and columns here to organize your footer content.
           </p>
+          <hr />
         </Footer>
       </div>
     )
