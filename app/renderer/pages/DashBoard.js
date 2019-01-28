@@ -57,15 +57,15 @@ class GalleryImages extends React.Component {
     this.state = {
       images: [this.createList(this.props.images, false)],
       fetched: {},
-      full_path: ''
+      full_path: 'Colleges'
     }
     this.handle_click = this.handle_click.bind(this)
   }
 
-  createList (paths, add_back = true) {
+  createList (paths, add_back_button = true) {
     var back = []
 
-    if (add_back) {
+    if (add_back_button) {
       back = [
         {
           src: '',
@@ -81,7 +81,8 @@ class GalleryImages extends React.Component {
       paths.map(function ({ key }) {
         var { name, ext } = path.parse(key)
         return {
-          src: '',
+          src: '', // thumbnailCaption: "this is " + ext,
+          // customOverlay: ext == '' ? 'open' : 'download',
           type: ext == '' ? 'folder' : 'file',
           thumbnail:
             ext_to_icon[ext] ||
@@ -119,17 +120,17 @@ class GalleryImages extends React.Component {
   handle_download (ele) {
     console.log('handle_download')
     console.log(ele)
-    console.log("downloading")
-    var name = ele.tags[0]["value"]
+    console.log('downloading')
+    var name = ele.tags[0]['value']
     var info = {
       filename: name,
-      content: "HI"
+      content: 'HI'
     }
-    var obj = JSON.stringify(info);
-    var data = "data: " + "text/json;charset=utf-8," + encodeURIComponent(obj);
+    var obj = JSON.stringify(info)
+    var data = 'data: ' + 'text/json;charset=utf-8,' + encodeURIComponent(obj)
     var downloader = document.getElementById('downloader')
-    downloader.setAttribute("download", name)
-    downloader.setAttribute("href", data)
+    downloader.setAttribute('download', name)
+    downloader.setAttribute('href', data)
     downloader.click()
   }
   navigate_back () {
@@ -141,10 +142,8 @@ class GalleryImages extends React.Component {
       oldFullPathList.pop()
       var newFullPath = oldFullPathList.join('/')
       this.state.images.pop()
-      var new_images = this.state.images
       this.setState({
         ...this.state,
-        images: this.state.images,
         full_path: newFullPath
       })
     }
@@ -199,8 +198,12 @@ class GalleryImages extends React.Component {
           rowHeight={80}
           onClickThumbnail={this.handle_click}
         />
-      <a style={{display: 'none'}} href={""} id='downloader' download="file.ext"></a>
-
+        <a
+          style={{ display: 'none' }}
+          href={''}
+          id='downloader'
+          download='file.ext'
+        />
       </div>
     )
   }
@@ -211,26 +214,9 @@ GalleryImages.propTypes = {
     .isRequired
 }
 
-GalleryImages.defaultProps = {
-  images: [
-    { key: '0.png' },
-    { key: '1' },
-    { key: '0.doc' },
-    { key: '0.jpg' },
-    { key: '2' },
-    { key: '0.ppt' },
-    { key: '0.jpeg' },
-    { key: '0.docx' },
-    { key: '0.png' },
-    { key: '0.pptx' },
-    { key: '0.txt' },
-    { key: '0.pdf' },
-    { key: '0.jpeg' },
-    { key: '0.docx' },
-    { key: '0.png' },
-    { key: '0.pptx' },
-    { key: '0.txt' },
-    { key: '0.invalid_ext' },
-    { key: '0.pdf' }
-  ]
+GalleryImages.defaultProps = fetchColleges()
+
+function fetchColleges () {
+  // TODO: change mocked colleges
+  return { images: [{ key: '1' }, { key: '2' }] }
 }

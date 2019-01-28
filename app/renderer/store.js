@@ -5,12 +5,14 @@ import thunk from 'redux-thunk';
 
 import user from './reducers/user';
 import userActions from './actions/user';
+import fileActions from './actions/file';
 
 export default function configureStore(initialState, routerHistory) {
   const router = routerMiddleware(routerHistory);
 
   const actionCreators = {
     ...userActions,
+    ...fileActions,
     push,
   };
 
