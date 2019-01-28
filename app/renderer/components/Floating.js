@@ -1,15 +1,7 @@
 import React, { Component } from 'react'
 // import User from './User'
-import {
-  Navbar,
-  NavItem,
-  Icon,
-  SideNav,
-  SideNavItem,
-  Button
-} from 'react-materialize'
+import { Button } from 'react-materialize'
 import PropTypes from 'prop-types'
-import Logo from '../helpers/logo.jpg'
 
 export default class Floating extends Component {
   static propTypes = {
@@ -17,19 +9,19 @@ export default class Floating extends Component {
     router: PropTypes.func.isRequired
   }
 
-  componentDidMount () {
+  componentDidMount() {
     console.log('this is Floating')
     console.log(this.props)
   }
 
-  handleLogout () {
+  handleLogout() {
     this.props.onLogout({
       username: 'not logged in',
       loggedIn: false
     })
   }
 
-  render () {
+  render() {
     const router = path => this.props.router(path)
     const logout = this.handleLogout.bind(this)
     let loggedIn = !this.props.user.loggedIn
@@ -66,13 +58,13 @@ export default class Floating extends Component {
             floating
             icon='publish'
             tooltip='logout'
-            tooltipOptions={{"position": "top", "delay" : 10}}
+            tooltipOptions={{ "position": "top", "delay": 10 }}
             className='green'
             onClick={logout}
           />
           <Button
             tooltip='profile'
-            tooltipOptions={{"position": "top", "delay" : 10}}
+            tooltipOptions={{ "position": "top", "delay": 10 }}
             floating
             icon='format_quote'
             className='yellow darken-1'
@@ -80,7 +72,7 @@ export default class Floating extends Component {
           />
           <Button
             tooltip='dashboard'
-            tooltipOptions={{"position": "top", "delay" : 10}}
+            tooltipOptions={{ "position": "top", "delay": 10 }}
             floating
             icon='insert_chart'
             className='red'

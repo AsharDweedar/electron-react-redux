@@ -1,33 +1,9 @@
 import React, { Component } from 'react'
-import { Breadcrumb, MenuItem } from 'react-materialize'
+import { Breadcrumb, MenuItem, Preloader } from 'react-materialize'
 import Gallery from 'react-grid-gallery'
 import PropTypes from 'prop-types'
 import path from 'path'
 
-export default class DashBoard extends Component {
-  render () {
-    return (
-      <div>
-        <h2>Logged in as {this.props.user.username}</h2>
-        <GalleryImages />
-      </div>
-    )
-  }
-}
-
-const fetched = {
-  '1': [{ key: '1.doc' }, { key: '1.jpg' }, { key: '4' }],
-  '2': [
-    { key: '2.png' },
-    { key: '3' },
-    { key: '2.doc' },
-    { key: '2.jpg' },
-    { key: '5' }
-  ],
-  '3': [{ key: '3.png' }, { key: '3.doc' }, { key: '3.jpg' }],
-  '4': [{ key: '4.png' }],
-  '5': [{ key: '5.png' }, { key: '5.doc' }, { key: '5.jpg' }]
-}
 const ext_to_icon = {
   '.pptx':
     'https://www.freeiconspng.com/uploads/powerpoint-icon-microsoft-powerpoint-icon-network-powerpoint-icons-and-3.png',
@@ -50,19 +26,25 @@ const ext_to_icon = {
     'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png'
 }
 
-class GalleryImages extends React.Component {
-  constructor (props) {
+export default class DashBoard extends Component {
+  constructor(props) {
     super(props)
+    console.log(".......................................")
+    console.log(props)
 
+    var fetched = this.props.fetched
+
+    console.log("fetched")
+    console.log(fetched)
     this.state = {
-      images: [this.createList(this.props.images, false)],
+      images: [this.createList(fetched, false)],
       fetched: {},
       full_path: 'Colleges'
     }
     this.handle_click = this.handle_click.bind(this)
   }
 
-  createList (paths, add_back_button = true) {
+  createList(paths, add_back_button = true) {
     var back = []
 
     if (add_back_button) {
@@ -95,17 +77,17 @@ class GalleryImages extends React.Component {
     )
   }
 
-  get_content (new_path) {
+  get_content(new_path) {
     var old = this.state.fetched[new_path]
     if (old) {
       return old
     } else {
-      var new_fetched = this.createList(fetched[new_path], true)
-      this.state.fetched[new_path] = new_fetched
-      return new_fetched
+      var { fetched } = this.createList(this.props.fetch(new_path), true)
+      this.state.fetched[new_path] = fetched
+      return fetched
     }
   }
-  handle_navigate (ele) {
+  handle_navigate(ele) {
     console.log('handle_navigate')
     console.log(ele)
     var new_path = ele.tags[0].value
@@ -117,7 +99,7 @@ class GalleryImages extends React.Component {
       full_path: `${this.state.full_path}/${new_path}`
     })
   }
-  handle_download (ele) {
+  handle_download(ele) {
     console.log('handle_download')
     console.log(ele)
     console.log('downloading')
@@ -133,7 +115,7 @@ class GalleryImages extends React.Component {
     downloader.setAttribute('href', data)
     downloader.click()
   }
-  navigate_back () {
+  navigate_back() {
     console.log('navigate_back')
     if (this.state.images.length == 1) {
       console.log("can't go back more")
@@ -149,7 +131,7 @@ class GalleryImages extends React.Component {
     }
   }
 
-  handle_click (index) {
+  handle_click(index) {
     var clicked_ele = this.state.images[this.state.images.length - 1][index]
     switch (clicked_ele.type) {
       case 'folder':
@@ -162,61 +144,75 @@ class GalleryImages extends React.Component {
         this.navigate_back()
     }
   }
-  render () {
-    console.log(this.state)
-    var images = this.state.images[this.state.images.length - 1]
-    return (
-      <div
-        style={{
-          display: 'block',
-          minHeight: '1px',
-          width: '80%',
-          border: '5px solid #ddd',
-          overflow: 'auto',
-          margin: 'auto'
-        }}
-      >
-        {this.state.full_path != '' ? (
-          <Breadcrumb className='black'>
-            {this.state.full_path.split('/').reduce(function (acc, name) {
-              // return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
-              return name == ''
-                ? acc
-                : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
-            }, [])}
-          </Breadcrumb>
-        ) : (
+  fetchData(path) {
+    // setTimeout(function () {
+    //   var fetched = this.props.fetch(path)
+    //   console.log("**********************************")
+    //   console.log("**********************************")
+    //   console.log("**********************************")
+    //   console.log(fetched)
+    // }.bind(this), 5)
+    
+  }
+  renderGallery(images) {
+    return <div>
+      {this.state.full_path != '' ? (
+        <Breadcrumb className='black'>
+          {this.state.full_path.split('/').reduce(function (acc, name) {
+            // return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+            return name == ''
+              ? acc
+              : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+          }, [])}
+        </Breadcrumb>
+      ) : (
           <Breadcrumb className='black'>
             <MenuItem>{''}</MenuItem>
           </Breadcrumb>
         )}
-        <Gallery
-          images={images}
-          enableLightbox={false}
-          enableImageSelection={false}
-          margin={15}
-          rowHeight={80}
-          onClickThumbnail={this.handle_click}
-        />
-        <a
-          style={{ display: 'none' }}
-          href={''}
-          id='downloader'
-          download='file.ext'
-        />
+      < Gallery
+        images={images}
+        enableLightbox={false}
+        enableImageSelection={false}
+        margin={15}
+        rowHeight={80}
+        onClickThumbnail={this.handle_click}
+      />
+      <a
+        style={{ display: 'none' }}
+        href={''}
+        id='downloader'
+        download='file.ext'
+      />
+    </div>
+  }
+  render() {
+    console.log(this.state)
+    var images = this.state.images[this.state.images.length - 1]
+    console.log("images", JSON.stringify(images))
+    if(images.length == 0 ) {
+      this.fetchData("")
+    }
+    return (
+      <div>
+        <h2>Logged in as {this.props.user.username}</h2>
+        <div
+          style={{
+            display: 'block',
+            minHeight: '1px',
+            width: '80%',
+            border: '5px solid #ddd',
+            overflow: 'auto',
+            margin: 'auto'
+          }}
+        >
+          {images.length > 0 ? this.renderGallery(images) : <span style={{ border: '1px solid red', display: 'inline-block', margin: 'auto', width: '30%' }}><Preloader size='big' /></span>}
+        </div>
       </div>
     )
   }
 }
 
-GalleryImages.propTypes = {
-  images: PropTypes.arrayOf(PropTypes.shape({ key: PropTypes.string }))
-    .isRequired
-}
-
-GalleryImages.defaultProps = fetchColleges()
-
-function fetchColleges () {
-  // TODO: change mocked colleges
-  return { images: [{ key: '1' }, { key: '2' }] }
+DashBoard.propTypes = {
+  file: PropTypes.shape({ fetch: PropTypes.function })
 }

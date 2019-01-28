@@ -2,6 +2,7 @@ import { handleActions } from 'redux-actions';
 import actions from '../actions/file';
 
 const fetched = {
+    "": [{ key: '1' }, { key: '2' }],
     '1': [{ key: '1.doc' }, { key: '1.jpg' }, { key: '4' }],
     '2': [
         { key: '2.png' },
@@ -22,8 +23,10 @@ export default handleActions(
         },
         [actions.list]: (state, action) => {
             var path = action.payload
-            return { ...state, fetched[path] };
-        },
+            console.log("path ...")
+            console.log(path)
+            return { ...state, fetched: fetched[path] };
+        }
     },
     {},
 );

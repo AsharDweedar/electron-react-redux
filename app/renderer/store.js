@@ -4,6 +4,7 @@ import persistState from 'redux-localstorage';
 import thunk from 'redux-thunk';
 
 import user from './reducers/user';
+import file from './reducers/file';
 import userActions from './actions/user';
 import fileActions from './actions/file';
 
@@ -19,6 +20,7 @@ export default function configureStore(initialState, routerHistory) {
   const reducers = {
     router: connectRouter(routerHistory),
     user,
+    file
   };
 
   const middlewares = [thunk, router];
