@@ -9,11 +9,6 @@ export default class Floating extends Component {
     router: PropTypes.func.isRequired
   }
 
-  componentDidMount() {
-    console.log('this is Floating')
-    console.log(this.props)
-  }
-
   handleLogout() {
     this.props.onLogout({
       username: 'not logged in',

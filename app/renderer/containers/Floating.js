@@ -6,8 +6,6 @@ import Floating from '../components/Floating'
 import userActions from '../actions/user'
 
 const mapStateToProps = state => {
-    console.log('state in Floating smart component mapStateToProps')
-    console.log(state)
     return state
 }
 

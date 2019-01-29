@@ -2,10 +2,6 @@ import React, { Component } from 'react'
 import { Footer } from 'react-materialize'
 
 export default class Tail extends Component {
-  componentDidMount () {
-    console.log('this is Tail')
-    console.log(this.props)
-  }
   render () {
     const router = this.props.router
     return (

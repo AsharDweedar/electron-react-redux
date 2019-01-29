@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 
 export default class User extends Component {
-  componentDidMount() {
-    console.log('this is user component')
-    console.log(this.props)
-  }
   render() {
     // const router = this.props.router
     return (

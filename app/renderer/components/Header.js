@@ -18,11 +18,6 @@ export default class Header extends Component {
     router: PropTypes.func.isRequired
   }
 
-  componentDidMount () {
-    console.log('this is header')
-    console.log(this.props)
-  }
-
   handleLogout () {
     this.props.onLogout({
       username: 'not logged in',
@@ -39,11 +34,7 @@ export default class Header extends Component {
     )
 
     const Img = <img src={Logo} alt={'logo'} />
-    console.log(Logo)
-    console.log('Logo')
     const router = path => this.props.router(path)
-    const logout = this.handleLogout.bind(this)
-    let loggedIn = !this.props.user.loggedIn
     return (
       <div>
         <Navbar brand={Img} className='black' right>

@@ -6,8 +6,6 @@ import Profile from '../pages/Profile'
 import userActions from '../actions/user'
 
 const mapStateToProps = state => {
-    console.log('state in Profile smart component mapStateToProps')
-    console.log(state)
     return state
 }
 

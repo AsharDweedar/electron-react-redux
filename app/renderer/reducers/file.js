@@ -19,13 +19,11 @@ const fetched = {
 export default handleActions(
     {
         [actions.fetch]: (state, action) => {
-            return { ...state, ...action.payload };
+            var path = action.payload
+            return { ...state, fetched: { ...state["fetched"], [path] : fetched[path]} };
         },
         [actions.list]: (state, action) => {
-            var path = action.payload
-            console.log("path ...")
-            console.log(path)
-            return { ...state, fetched: fetched[path] };
+            return { ...state, ...action.payload };
         }
     },
     {},
