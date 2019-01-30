@@ -27,10 +27,11 @@ const ext_to_icon = {
     'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/live_folder.png'
 }
 
-
 const mapStateToProps = state => {
-  console.log(JSON.stringify(state))
-  return { ...state, ext_to_icon, file: {fetched: {'' : []}}}
+  var new_state = { ...state, ext_to_icon };
+  console.log("mapStateToProps 2222222111111111144444444444")
+  console.log(JSON.stringify(new_state))
+  return new_state
 }
 
 const mapDispatchToProps = dispatch => {
@@ -44,8 +45,6 @@ const mapDispatchToProps = dispatch => {
     }
   }
 }
-
-
 
 export default connect(
   mapStateToProps,

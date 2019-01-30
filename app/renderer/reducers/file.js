@@ -14,6 +14,6 @@ export default handleActions(
             return { ...state, ...action.payload };
         }
     },
-    {fetched: {}},
+    {fetched: {fetched_paths: [], hi: "hello"}},
 );
 

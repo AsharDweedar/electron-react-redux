@@ -39,9 +39,10 @@ export default function configureStore(initialState, routerHistory) {
   const rootReducer = (state, action) => {
     if (action.type == 'FILE_RESET') {
       console.log("resetting state ")
-      state = {...state, file: undefined}
+      state = { ...state, file: { fetched: { fetched_paths: [] } }}
     }
-
+    console.log("JSON.stringify(state)")
+    console.log(JSON.stringify(state))
     return appReducer(state, action)
   }
 

@@ -8,13 +8,15 @@ export default class DashBoard extends Component {
   constructor (props) {
     super(props)
     console.log('.............DashBoard..........................')
-    console.log(props)
+    console.log(JSON.stringify(props))
 
     var fetched = this.props['file']['fetched']
+    console.log("this.props['file']")
+    console.log(JSON.stringify(this.props['file']))
     this.state = {
-      images: [this.createList(fetched[''], false)],
+      images: [this.createList((fetched[""] || []), false)],
       fetched: fetched || {},
-      full_path: ''
+      full_path: ""
     }
     this.handle_click = this.handle_click.bind(this)
   }
@@ -58,21 +60,29 @@ export default class DashBoard extends Component {
     if (old) {
       return this.createList(old, true)
     } else {
-      if (new_path in this.state.fetched['fetched_paths']) {
-        console.log('already Failed')
+      if (this.state.fetched['fetched_paths'].includes(new_path)) {
+        console.log('already Failed');
       } else {
-        this.props.fetch(new_path)
+        const res = this.props.fetch(new_path);
+        console.log("done fetch 1111111111111111111111111111111111111111")
+        console.log(JSON.stringify(res['fetched']))
+        this.setState({fetched: res["fetched"]})
       }
     }
+  }
+
+  componentWillReceiveProps() {
+    
   }
 
   fetchFirst () {
     setTimeout(
       function () {
-        if ('' in this.state.fetched['fetched_paths']) {
+        if (this.props['file']['fetched']['fetched_paths'].includes("")) {
+          // this.state["fetched"][""] = this.props["fetched"][""]
           console.log('already Failed')
         } else {
-          this.props.fetch('')
+          this.props.fetch("")
         }
       }.bind(this),
       5000
@@ -135,10 +145,10 @@ export default class DashBoard extends Component {
   renderGallery (images) {
     return (
       <div>
-        {this.state.full_path != '' ? (
+        {this.state.full_path != "" ? (
           <Breadcrumb className='black'>
             {this.state.full_path.split('/').reduce(function (acc, name) {
-              return name == ''
+              return name == ""
                 ? acc
                 : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
             }, [])}
@@ -167,9 +177,15 @@ export default class DashBoard extends Component {
   }
 
   render () {
+    console.log("props now 9999999999999999999999999")
+    console.log("props now 9999999999999999999999999")
+    console.log("props now 9999999999999999999999999")
+    console.log(JSON.stringify(this.props))
     var images = this.state.images[this.state.images.length - 1]
     console.log("images 2222222222222222222", JSON.stringify(this.state['images']))
-    if (images.length == 0) this.fetchFirst()
+    if (images.length == 0) {
+      this.fetchFirst()
+    }
     return (
       <div>
         <h2>Logged in as {this.props.user.username}</h2>
