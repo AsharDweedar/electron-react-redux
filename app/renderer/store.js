@@ -9,6 +9,7 @@ import userActions from './actions/user';
 import fileActions from './actions/file';
 
 export default function configureStore(initialState, routerHistory) {
+  console.log(JSON.stringify(initialState), "initialState ***************************")
   const router = routerMiddleware(routerHistory);
 
   const actionCreators = {
@@ -34,7 +35,15 @@ export default function configureStore(initialState, routerHistory) {
   })();
 
   const enhancer = composeEnhancers(applyMiddleware(...middlewares), persistState());
-  const rootReducer = combineReducers(reducers);
+  const appReducer = combineReducers(reducers);
+  const rootReducer = (state, action) => {
+    if (action.type == 'FILE_RESET') {
+      console.log("resetting state ")
+      state = {...state, file: undefined}
+    }
+
+    return appReducer(state, action)
+  }
 
   return createStore(rootReducer, initialState, enhancer);
 }

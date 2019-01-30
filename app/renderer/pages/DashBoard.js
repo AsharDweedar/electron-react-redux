@@ -4,23 +4,22 @@ import Gallery from 'react-grid-gallery'
 import PropTypes from 'prop-types'
 import path from 'path'
 
-
 export default class DashBoard extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
-    console.log(".............DashBoard..........................")
+    console.log('.............DashBoard..........................')
     console.log(props)
 
-    var fetched = this.props["file"]["fetched"]
+    var fetched = this.props['file']['fetched']
     this.state = {
-      images: [this.createList(fetched[""], false)],
-      fetched: (fetched || {}),
+      images: [this.createList(fetched[''], false)],
+      fetched: fetched || {},
       full_path: ''
     }
     this.handle_click = this.handle_click.bind(this)
   }
 
-  createList(paths, add_back_button = true) {
+  createList (paths, add_back_button = true) {
     var that = this
     var back = []
 
@@ -54,17 +53,33 @@ export default class DashBoard extends Component {
     )
   }
 
-  get_content(new_path) {
+  get_content (new_path) {
     var old = this.state.fetched[new_path]
     if (old) {
       return this.createList(old, true)
     } else {
-      var { fetched } = this.createList(this.props.fetch(new_path), true)
-      this.state.fetched[new_path] = fetched
-      return fetched
+      if (new_path in this.state.fetched['fetched_paths']) {
+        console.log('already Failed')
+      } else {
+        this.props.fetch(new_path)
+      }
     }
   }
-  handle_navigate(ele) {
+
+  fetchFirst () {
+    setTimeout(
+      function () {
+        if ('' in this.state.fetched['fetched_paths']) {
+          console.log('already Failed')
+        } else {
+          this.props.fetch('')
+        }
+      }.bind(this),
+      5000
+    )
+  }
+
+  handle_navigate (ele) {
     var new_path = ele.tags[0].value
     var new_list = this.get_content(new_path)
     this.setState({
@@ -73,7 +88,8 @@ export default class DashBoard extends Component {
       full_path: `${this.state.full_path}/${new_path}`
     })
   }
-  handle_download(ele) {
+
+  handle_download (ele) {
     var name = ele.tags[0]['value']
     var info = {
       filename: name,
@@ -86,7 +102,8 @@ export default class DashBoard extends Component {
     downloader.setAttribute('href', data)
     downloader.click()
   }
-  navigate_back() {
+
+  navigate_back () {
     if (this.state.images.length == 1) {
       console.log("can't go back more")
     } else {
@@ -101,7 +118,7 @@ export default class DashBoard extends Component {
     }
   }
 
-  handle_click(index) {
+  handle_click (index) {
     var clicked_ele = this.state.images[this.state.images.length - 1][index]
     switch (clicked_ele.type) {
       case 'folder':
@@ -114,44 +131,49 @@ export default class DashBoard extends Component {
         this.navigate_back()
     }
   }
-  
-  renderGallery(images) {
-    return <div>
-      {this.state.full_path != '' ? (
-        <Breadcrumb className='black'>
-          {this.state.full_path.split('/').reduce(function (acc, name) {
-            return name == ''
-              ? acc
-              : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
-          }, [])}
-        </Breadcrumb>
-      ) : (
+
+  renderGallery (images) {
+    return (
+      <div>
+        {this.state.full_path != '' ? (
+          <Breadcrumb className='black'>
+            {this.state.full_path.split('/').reduce(function (acc, name) {
+              return name == ''
+                ? acc
+                : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+            }, [])}
+          </Breadcrumb>
+        ) : (
           <Breadcrumb className='black'>
             <MenuItem>{''}</MenuItem>
           </Breadcrumb>
         )}
-      < Gallery
-        images={images}
-        enableLightbox={false}
-        enableImageSelection={false}
-        margin={15}
-        rowHeight={80}
-        onClickThumbnail={this.handle_click}
-      />
-      <a
-        style={{ display: 'none' }}
-        href={''}
-        id='downloader'
-        download='file.ext'
-      />
-    </div>
+        <Gallery
+          images={images}
+          enableLightbox={false}
+          enableImageSelection={false}
+          margin={15}
+          rowHeight={80}
+          onClickThumbnail={this.handle_click}
+        />
+        <a
+          style={{ display: 'none' }}
+          href={''}
+          id='downloader'
+          download='file.ext'
+        />
+      </div>
+    )
   }
-  render() {
+
+  render () {
     var images = this.state.images[this.state.images.length - 1]
-  
+    console.log("images 2222222222222222222", JSON.stringify(this.state['images']))
+    if (images.length == 0) this.fetchFirst()
     return (
       <div>
         <h2>Logged in as {this.props.user.username}</h2>
+        <Button onClick={this.props.reset}>ReSet</Button>
         <div
           style={{
             display: 'block',
@@ -162,7 +184,20 @@ export default class DashBoard extends Component {
             margin: 'auto'
           }}
         >
-          {images.length > 0 ? this.renderGallery(images) : <span style={{ border: '1px solid red', display: 'inline-block', margin: 'auto', width: '30%' }}><Preloader size='big' /></span>}
+          {images.length > 0 ? (
+            this.renderGallery(images)
+          ) : (
+            <span
+              style={{
+                border: '1px solid red',
+                display: 'inline-block',
+                margin: 'auto',
+                width: '30%'
+              }}
+            >
+              <Preloader size='big' />
+            </span>
+          )}
         </div>
       </div>
     )

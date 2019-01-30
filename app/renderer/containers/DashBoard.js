@@ -30,7 +30,7 @@ const ext_to_icon = {
 
 const mapStateToProps = state => {
   console.log(JSON.stringify(state))
-  return { ...state, ext_to_icon}
+  return { ...state, ext_to_icon, file: {fetched: {'' : []}}}
 }
 
 const mapDispatchToProps = dispatch => {
@@ -38,6 +38,9 @@ const mapDispatchToProps = dispatch => {
   return {
     fetch: path => {
       return file.fetch(path)
+    },
+    reset: () => {
+      return file.reset()
     }
   }
 }
