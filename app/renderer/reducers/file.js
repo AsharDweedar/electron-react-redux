@@ -14,6 +14,6 @@ export default handleActions(
             return { ...state, ...action.payload };
         }
     },
-    {fetched: {fetched_paths: [], hi: "hello"}},
+    {fetched: {fetched_paths: [], default_state_for_file: "hello00000000000000000"}},
 );
 

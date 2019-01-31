@@ -29,8 +29,6 @@ const ext_to_icon = {
 
 const mapStateToProps = state => {
   var new_state = { ...state, ext_to_icon };
-  console.log("mapStateToProps 2222222111111111144444444444")
-  console.log(JSON.stringify(new_state))
   return new_state
 }
 

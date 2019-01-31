@@ -9,7 +9,6 @@ import userActions from './actions/user';
 import fileActions from './actions/file';
 
 export default function configureStore(initialState, routerHistory) {
-  console.log(JSON.stringify(initialState), "initialState ***************************")
   const router = routerMiddleware(routerHistory);
 
   const actionCreators = {
@@ -41,8 +40,6 @@ export default function configureStore(initialState, routerHistory) {
       console.log("resetting state ")
       state = { ...state, file: { fetched: { fetched_paths: [] } }}
     }
-    console.log("JSON.stringify(state)")
-    console.log(JSON.stringify(state))
     return appReducer(state, action)
   }
 

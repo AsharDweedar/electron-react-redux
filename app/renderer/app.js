@@ -14,7 +14,10 @@ const syncHistoryWithStore = (store, history) => {
   }
 }
 
-const initialState = { user: { username: "ashar as default user", loggedIn: true }, file: { fetched: { fetched_paths: []}} }
+const initialState = {
+  user: { username: 'ashar as default store', loggedIn: true },
+  file: { fetched: { fetched_paths: [] }, default_state_for_store: 'HI' }
+}
 const routerHistory = createMemoryHistory()
 const store = configureStore(initialState, routerHistory)
 syncHistoryWithStore(store, routerHistory)

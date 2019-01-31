@@ -10,5 +10,5 @@ export default handleActions(
       return { ...state, ...action.payload };
     },
   },
-  {},
+  { username: "ashar as default user", loggedIn: true },
 );

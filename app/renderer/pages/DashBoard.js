@@ -7,21 +7,17 @@ import path from 'path'
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
-    console.log('.............DashBoard..........................')
-    console.log(JSON.stringify(props))
-
     var fetched = this.props['file']['fetched']
-    console.log("this.props['file']")
-    console.log(JSON.stringify(this.props['file']))
     this.state = {
-      images: [this.createList((fetched[""] || []), false)],
+      images: this.createList(fetched['/'] || [], false),
       fetched: fetched || {},
-      full_path: ""
+      full_path: '/',
+      currentFolder: '/'
     }
     this.handle_click = this.handle_click.bind(this)
   }
 
-  createList (paths, add_back_button = true) {
+  createList (paths = [], add_back_button = true) {
     var that = this
     var back = []
 
@@ -37,12 +33,14 @@ export default class DashBoard extends Component {
         }
       ]
     }
+    console.log('paths')
+    console.log(JSON.stringify(paths))
+    paths = []
     return back.concat(
-      paths.map(function ({ key }) {
+      (paths || []).map(function ({ key }) {
         var { name, ext } = path.parse(key)
         return {
-          src: '', // thumbnailCaption: "this is " + ext,
-          // customOverlay: ext == '' ? 'open' : 'download',
+          src: '',
           type: ext == '' ? 'folder' : 'file',
           thumbnail:
             that.props.ext_to_icon[ext] ||
@@ -55,48 +53,60 @@ export default class DashBoard extends Component {
     )
   }
 
-  get_content (new_path) {
-    var old = this.state.fetched[new_path]
-    if (old) {
-      return this.createList(old, true)
-    } else {
-      if (this.state.fetched['fetched_paths'].includes(new_path)) {
-        console.log('already Failed');
-      } else {
-        const res = this.props.fetch(new_path);
-        console.log("done fetch 1111111111111111111111111111111111111111")
-        console.log(JSON.stringify(res['fetched']))
-        this.setState({fetched: res["fetched"]})
-      }
-    }
-  }
-
-  componentWillReceiveProps() {
-    
-  }
-
-  fetchFirst () {
-    setTimeout(
-      function () {
-        if (this.props['file']['fetched']['fetched_paths'].includes("")) {
-          // this.state["fetched"][""] = this.props["fetched"][""]
-          console.log('already Failed')
+  updateState (full_path = '/') {
+    setTimeout(function () {
+      console.log('updateState  full_path ', full_path)
+      if (this.props['file']['fetched']['fetched_paths'].includes(full_path)) {
+        if (!this.state['fetched']['fetched_paths'].includes(full_path)) {
+          console.log('updating state .... this.props.file["fetched"]')
+          console.log(this.props.file['fetched'])
+          this.state.fetched = {
+            ...this.state.fetched,
+            ...this.props.file['fetched']
+          }
+          this.state.images = this.createList(
+            this.props['file']['fetched'][full_path],
+            path != '/'
+          )
         } else {
-          this.props.fetch("")
+          alert('already Failed')
         }
-      }.bind(this),
-      5000
-    )
+      } else {
+        this.props.fetch(full_path)
+      }
+    }, 7000)
   }
 
   handle_navigate (ele) {
-    var new_path = ele.tags[0].value
-    var new_list = this.get_content(new_path)
-    this.setState({
-      ...this.state,
-      images: [...this.state.images, new_list],
-      full_path: `${this.state.full_path}/${new_path}`
-    })
+    console.log('handle_navigate')
+    var folder_name = ele.tags[0].value
+    var old = this.state.fetched[folder_name]
+    var newFullPath = path.join(this.state.full_path, folder_name)
+    if (old) {
+      var new_list = this.createList(old, true)
+      this.setState({
+        ...this.state,
+        images: new_list,
+        full_path: newFullPath
+      })
+    } else {
+      if (this.state.fetched['fetched_paths'].includes(folder_name)) {
+        alert('something is wrong with fetching data !!')
+      } else {
+        console.log(
+          'setting state inside handle navigate, new full path',
+          newFullPath
+        )
+        var path_list = newFullPath.split('/')
+        var folder = path_list[path_list.length - 1]
+        this.setState({
+          ...this.state,
+          images: [],
+          full_path: newFullPath,
+          currentFolder: folder
+        })
+      }
+    }
   }
 
   handle_download (ele) {
@@ -114,22 +124,19 @@ export default class DashBoard extends Component {
   }
 
   navigate_back () {
-    if (this.state.images.length == 1) {
-      console.log("can't go back more")
-    } else {
-      var oldFullPathList = this.state.full_path.split('/')
-      oldFullPathList.pop()
-      var newFullPath = oldFullPathList.join('/')
-      this.state.images.pop()
-      this.setState({
-        ...this.state,
-        full_path: newFullPath
-      })
-    }
+    var oldFullPathList = this.state.full_path.split('/')
+    oldFullPathList.pop()
+    var currentFolder = oldFullPathList[oldFullPathList.length - 1]
+    this.setState({
+      ...this.state,
+      images: this.state.fetched.currentFolder,
+      currentFolder: currentFolder,
+      full_path: `/${oldFullPathList.join('/')}`
+    })
   }
 
   handle_click (index) {
-    var clicked_ele = this.state.images[this.state.images.length - 1][index]
+    var clicked_ele = this.state.images[index]
     switch (clicked_ele.type) {
       case 'folder':
         this.handle_navigate(clicked_ele)
@@ -145,10 +152,10 @@ export default class DashBoard extends Component {
   renderGallery (images) {
     return (
       <div>
-        {this.state.full_path != "" ? (
+        {this.state.full_path != '/' ? (
           <Breadcrumb className='black'>
             {this.state.full_path.split('/').reduce(function (acc, name) {
-              return name == ""
+              return name == '/'
                 ? acc
                 : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
             }, [])}
@@ -177,18 +184,16 @@ export default class DashBoard extends Component {
   }
 
   render () {
-    console.log("props now 9999999999999999999999999")
-    console.log("props now 9999999999999999999999999")
-    console.log("props now 9999999999999999999999999")
-    console.log(JSON.stringify(this.props))
-    var images = this.state.images[this.state.images.length - 1]
-    console.log("images 2222222222222222222", JSON.stringify(this.state['images']))
+    console.log('state in render method :............ ')
+    console.log(JSON.stringify(this.state))
+    var images = this.state.images
     if (images.length == 0) {
-      this.fetchFirst()
+      this.updateState(this.state['full_path'])
     }
     return (
       <div>
         <h2>Logged in as {this.props.user.username}</h2>
+        <Button onClick={this.props.reset}>ReSet</Button>
         <Button onClick={this.props.reset}>ReSet</Button>
         <div
           style={{
@@ -221,5 +226,8 @@ export default class DashBoard extends Component {
 }
 
 DashBoard.propTypes = {
-  file: PropTypes.shape({ fetch: PropTypes.function })
+  fetch: PropTypes.function,
+  file: PropTypes.shape({
+    fetched: PropTypes.shape({ fetched_paths: PropTypes.array.isRequired })
+  })
 }
