@@ -1,25 +1,28 @@
-import React, { Component } from 'react'
-import { Breadcrumb, MenuItem, Preloader, Button } from 'react-materialize'
-import Gallery from 'react-grid-gallery'
-import PropTypes from 'prop-types'
-import path from 'path'
+import React, { Component } from 'react';
+import { Breadcrumb, MenuItem, Preloader, Button } from 'react-materialize';
+import Gallery from 'react-grid-gallery';
+import PropTypes from 'prop-types';
+import path from 'path';
+import { isArray } from 'util';
 
 export default class DashBoard extends Component {
-  constructor (props) {
-    super(props)
-    var fetched = this.props['file']['fetched']
+  constructor(props) {
+    super(props);
+    console.log('props inside dashboard ///////////////////////');
+    console.log(props);
+    var fetched = this.props['file']['fetched'];
     this.state = {
       images: this.createList(fetched['/'] || [], false),
       fetched: fetched || {},
       full_path: '/',
-      currentFolder: '/'
-    }
-    this.handle_click = this.handle_click.bind(this)
+      currentFolder: '/',
+    };
+    this.handle_click = this.handle_click.bind(this);
   }
 
-  createList (paths = [], add_back_button = true) {
-    var that = this
-    var back = []
+  createList(paths = [], add_back_button = true) {
+    var that = this;
+    var back = [];
 
     if (add_back_button) {
       back = [
@@ -29,16 +32,16 @@ export default class DashBoard extends Component {
             'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/links.png',
           thumbnailWidth: 10,
           thumbnailHeight: 10,
-          tags: [{ value: 'back', title: 'Name' }]
-        }
-      ]
+          tags: [{ value: 'back', title: 'Name' }],
+        },
+      ];
     }
-    console.log('paths')
-    console.log(JSON.stringify(paths))
-    paths = []
+    console.log('paths');
+    console.log(JSON.stringify(paths));
+    paths = isArray(paths) ? paths : paths.value;
     return back.concat(
-      (paths || []).map(function ({ key }) {
-        var { name, ext } = path.parse(key)
+      (paths || []).map(function({ key }) {
+        var { name, ext } = path.parse(key);
         return {
           src: '',
           type: ext == '' ? 'folder' : 'file',
@@ -47,121 +50,117 @@ export default class DashBoard extends Component {
             'https://cdn1.iconfinder.com/data/icons/communication-bold-line-2/48/69-512.png',
           thumbnailWidth: 10,
           thumbnailHeight: 10,
-          tags: [{ value: name + ext, title: 'Name' }]
-        }
-      })
-    )
+          tags: [{ value: name + ext, title: 'Name' }],
+        };
+      }),
+    );
   }
 
-  updateState (full_path = '/') {
-    setTimeout(function () {
-      console.log('updateState  full_path ', full_path)
-      if (this.props['file']['fetched']['fetched_paths'].includes(full_path)) {
-        if (!this.state['fetched']['fetched_paths'].includes(full_path)) {
-          console.log('updating state .... this.props.file["fetched"]')
-          console.log(this.props.file['fetched'])
-          this.state.fetched = {
-            ...this.state.fetched,
-            ...this.props.file['fetched']
+  updateState(full_path = '/') {
+    setTimeout(
+      function() {
+        console.log('updateState  full_path ', full_path);
+        if (this.props['file']['fetched']['fetched_paths'].includes(full_path)) {
+          if (!this.state['fetched']['fetched_paths'].includes(full_path)) {
+            console.log('updating state .... this.props.file["fetched"]');
+            console.log(this.props.file['fetched']);
+            this.state.fetched = {
+              ...this.state.fetched,
+              ...this.props.file['fetched'],
+            };
+            this.state.images = this.createList(
+              this.props['file']['fetched'][full_path],
+              path != '/',
+            );
+          } else {
+            alert('already Failed');
           }
-          this.state.images = this.createList(
-            this.props['file']['fetched'][full_path],
-            path != '/'
-          )
         } else {
-          alert('already Failed')
+          this.props.fetch(full_path);
         }
-      } else {
-        this.props.fetch(full_path)
-      }
-    }, 7000)
+      }.bind(this),
+      7000,
+    );
   }
 
-  handle_navigate (ele) {
-    console.log('handle_navigate')
-    var folder_name = ele.tags[0].value
-    var old = this.state.fetched[folder_name]
-    var newFullPath = path.join(this.state.full_path, folder_name)
+  handle_navigate(ele) {
+    console.log('handle_navigate');
+    var folder_name = ele.tags[0].value;
+    var old = this.state.fetched[folder_name];
+    var newFullPath = path.join(this.state.full_path, folder_name);
     if (old) {
-      var new_list = this.createList(old, true)
+      var new_list = this.createList(old, true);
       this.setState({
         ...this.state,
         images: new_list,
-        full_path: newFullPath
-      })
+        full_path: newFullPath,
+      });
     } else {
       if (this.state.fetched['fetched_paths'].includes(folder_name)) {
-        alert('something is wrong with fetching data !!')
+        alert('something is wrong with fetching data !!');
       } else {
-        console.log(
-          'setting state inside handle navigate, new full path',
-          newFullPath
-        )
-        var path_list = newFullPath.split('/')
-        var folder = path_list[path_list.length - 1]
+        console.log('setting state inside handle navigate, new full path', newFullPath);
         this.setState({
           ...this.state,
           images: [],
           full_path: newFullPath,
-          currentFolder: folder
-        })
+          currentFolder: folder_name,
+        });
       }
     }
   }
 
-  handle_download (ele) {
-    var name = ele.tags[0]['value']
+  handle_download(ele) {
+    var name = ele.tags[0]['value'];
     var info = {
       filename: name,
-      content: 'HI'
-    }
-    var obj = JSON.stringify(info)
-    var data = 'data: ' + 'text/json;charset=utf-8,' + encodeURIComponent(obj)
-    var downloader = document.getElementById('downloader')
-    downloader.setAttribute('download', name)
-    downloader.setAttribute('href', data)
-    downloader.click()
+      content: 'HI',
+    };
+    var obj = JSON.stringify(info);
+    var data = 'data: ' + 'text/json;charset=utf-8,' + encodeURIComponent(obj);
+    var downloader = document.getElementById('downloader');
+    downloader.setAttribute('download', name);
+    downloader.setAttribute('href', data);
+    downloader.click();
   }
 
-  navigate_back () {
-    var oldFullPathList = this.state.full_path.split('/')
-    oldFullPathList.pop()
-    var currentFolder = oldFullPathList[oldFullPathList.length - 1]
+  navigate_back() {
+    var oldFullPathList = this.state.full_path.split('/');
+    oldFullPathList.pop();
+    var currentFolder = oldFullPathList[oldFullPathList.length - 1];
     this.setState({
       ...this.state,
       images: this.state.fetched.currentFolder,
       currentFolder: currentFolder,
-      full_path: `/${oldFullPathList.join('/')}`
-    })
+      full_path: `/${oldFullPathList.join('/')}`,
+    });
   }
 
-  handle_click (index) {
-    var clicked_ele = this.state.images[index]
+  handle_click(index) {
+    var clicked_ele = this.state.images[index];
     switch (clicked_ele.type) {
       case 'folder':
-        this.handle_navigate(clicked_ele)
-        break
+        this.handle_navigate(clicked_ele);
+        break;
       case 'file':
-        this.handle_download(clicked_ele)
-        break
+        this.handle_download(clicked_ele);
+        break;
       default:
-        this.navigate_back()
+        this.navigate_back();
     }
   }
 
-  renderGallery (images) {
+  renderGallery(images) {
     return (
       <div>
         {this.state.full_path != '/' ? (
-          <Breadcrumb className='black'>
-            {this.state.full_path.split('/').reduce(function (acc, name) {
-              return name == '/'
-                ? acc
-                : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+          <Breadcrumb className="black">
+            {this.state.full_path.split('/').reduce(function(acc, name) {
+              return name == '/' ? acc : acc.concat([<MenuItem key={name}>{name}</MenuItem>]);
             }, [])}
           </Breadcrumb>
         ) : (
-          <Breadcrumb className='black'>
+          <Breadcrumb className="black">
             <MenuItem>{''}</MenuItem>
           </Breadcrumb>
         )}
@@ -173,27 +172,25 @@ export default class DashBoard extends Component {
           rowHeight={80}
           onClickThumbnail={this.handle_click}
         />
-        <a
-          style={{ display: 'none' }}
-          href={''}
-          id='downloader'
-          download='file.ext'
-        />
+        <a style={{ display: 'none' }} href={''} id="downloader" download="file.ext" />
       </div>
-    )
+    );
   }
 
-  render () {
-    console.log('state in render method :............ ')
-    console.log(JSON.stringify(this.state))
-    var images = this.state.images
-    if (images.length == 0) {
-      this.updateState(this.state['full_path'])
+  componentDidMount() {
+    console.log("componentDidMount '''''''''''''''''''''''")
+    if (this.state.images.length == 0) {
+      this.updateState(this.state['full_path']);
     }
+  }
+
+  render() {
+    console.log('state in render method :............ ');
+    console.log(JSON.stringify(this.state));
+    var images = this.state.images;
     return (
       <div>
         <h2>Logged in as {this.props.user.username}</h2>
-        <Button onClick={this.props.reset}>ReSet</Button>
         <Button onClick={this.props.reset}>ReSet</Button>
         <div
           style={{
@@ -202,9 +199,8 @@ export default class DashBoard extends Component {
             width: '80%',
             border: '5px solid #ddd',
             overflow: 'auto',
-            margin: 'auto'
-          }}
-        >
+            margin: 'auto',
+          }}>
           {images.length > 0 ? (
             this.renderGallery(images)
           ) : (
@@ -213,21 +209,20 @@ export default class DashBoard extends Component {
                 border: '1px solid red',
                 display: 'inline-block',
                 margin: 'auto',
-                width: '30%'
-              }}
-            >
-              <Preloader size='big' />
+                width: '30%',
+              }}>
+              <Preloader size="big" />
             </span>
           )}
         </div>
       </div>
-    )
+    );
   }
 }
 
 DashBoard.propTypes = {
   fetch: PropTypes.function,
   file: PropTypes.shape({
-    fetched: PropTypes.shape({ fetched_paths: PropTypes.array.isRequired })
-  })
-}
+    fetched: PropTypes.shape({ fetched_paths: PropTypes.array.isRequired }),
+  }),
+};

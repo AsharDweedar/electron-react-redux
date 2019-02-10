@@ -4,10 +4,10 @@ import * as s3 from '../helpers/s3_fake'
 
 export default handleActions(
     {
-        [actions.fetch]: (state, action) => {
+        [actions.fetch]: async function (state, action)  {
             console.log("fetching ....................")
             var path = action.payload
-            var list = s3.ls(path)
+            var list = await s3.ls(path)
             return { ...state, fetched: { ...state["fetched"], [path]: list, fetched_paths: (state["fetched"]["fetched_paths"] || []).concat([path])} };
         },
         [actions.reset]: (state, action) => {
