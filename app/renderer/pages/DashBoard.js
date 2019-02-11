@@ -60,10 +60,10 @@ export default class DashBoard extends Component {
     console.log('handle_navigate')
     let [{ value }] = ele.tags
     console.log('folder name  ::::::: ', value)
-    var newFullPath = path.join(this.state.full_path, value)
+    var newFullPath = path.join(this.props.file.full_path, value)
     this.state.currentFolder = value
     this.state.full_path = newFullPath
-    this.props.navigate(newFullPath, value)
+    this.props.navigate(newFullPath, value, !this.props.file[newFullPath])
   }
 
   navigate_back () {
@@ -72,7 +72,7 @@ export default class DashBoard extends Component {
     var currentFolder = oldFullPathList[oldFullPathList.length - 1]
     this.state.currentFolder = currentFolder
     this.state.full_path = oldFullPathList.join('/')
-    this.props.navigate(oldFullPathList.join('/'), currentFolder)
+    this.props.navigate(oldFullPathList.join('/'), currentFolder, false)
   }
 
   handle_download (ele) {

@@ -51,10 +51,14 @@ const mapDispatchToProps = dispatch => {
     reset: () => {
       return file.reset()
     },
-    navigate: (full_path, currentFolder) => {
-      file.navigate({ currentFolder, full_path })
-      return s3
-        .ls(path)
+    navigate: (path, currentFolder, isFetch) => {
+      console.log('calling navigate inside map dispatch to props')
+      file.navigate({ currentFolder, full_path: path })
+      console.log('end of --- calling navigate inside map dispatch to props')
+      console.log(isFetch, 'isFetch')
+      if (!isFetch) return
+      file.fetchStart({ path })
+      s3.ls(path)
         .then(list => {
           file.fetchDone({ list, path })
           return list
