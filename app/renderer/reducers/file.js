@@ -1,19 +1,43 @@
-import { handleActions } from 'redux-actions';
-import actions from '../actions/file';
+import { handleActions } from 'redux-actions'
+import actions from '../actions/file'
 import * as s3 from '../helpers/s3_fake'
 
 export default handleActions(
-    {
-        [actions.fetch]: async function (state, action)  {
-            console.log("fetching ....................")
-            var path = action.payload
-            var list = await s3.ls(path)
-            return { ...state, fetched: { ...state["fetched"], [path]: list, fetched_paths: (state["fetched"]["fetched_paths"] || []).concat([path])} };
-        },
-        [actions.reset]: (state, action) => {
-            return { ...state, ...action.payload };
-        }
+  {
+    [actions.fetchStart]: function (state, { payload: { path } }) {
+        console.log("select start")
+        console.log(path)
+      return {
+        ...state,
+        fetched: { ...state['fetched'], [path]: { status: 'Loading' } }
+      }
     },
-    {fetched: {fetched_paths: [], default_state_for_file: "hello00000000000000000"}},
-);
-
+    [actions.fetchDone]: function (state, { payload: { path, list } }) {
+        console.log("path in fetching done ")
+        console.log(path)
+      return {
+        ...state,
+        fetched: {
+          ...state['fetched'],
+          [path]: { status: 'Done', paths: list }
+        }
+      }
+    },
+    [actions.fetchFailed]: function (state, { payload: { path, message } }) {
+      return {
+        ...state,
+        fetched: {
+          ...state['fetched'],
+          [path]: { status: 'Failed', message }
+        }
+      }
+    },
+    [actions.fetch]: function (state, action) {
+      return { ...state }
+    },
+    [actions.reset]: (state, action) => {
+      return { ...state, ...action.payload }
+    }
+  },
+  { fetched: {} }
+)

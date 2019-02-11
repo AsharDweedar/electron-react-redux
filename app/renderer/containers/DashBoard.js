@@ -1,5 +1,6 @@
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import * as s3 from '../helpers/s3_fake'
 
 import fileActions from '../actions/file'
 
@@ -28,15 +29,24 @@ const ext_to_icon = {
 }
 
 const mapStateToProps = state => {
-  var new_state = { ...state, ext_to_icon };
+ var new_state = { ...state, ext_to_icon }
   return new_state
 }
 
 const mapDispatchToProps = dispatch => {
   const file = bindActionCreators(fileActions, dispatch)
   return {
-    fetch: path => {
-      return file.fetch(path)
+    fetch: (path = '/') => {
+      console.log("calling detch with path : ")
+      console.log(path)
+      file.fetchStart({ path })
+      return s3
+        .ls(path)
+        .then(list => {
+          file.fetchDone({ list, path })
+          return list
+        })
+        .catch(error => file.fetchFailed({ message: error, path }))
     },
     reset: () => {
       return file.reset()
