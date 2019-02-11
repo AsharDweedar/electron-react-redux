@@ -19,10 +19,10 @@ export default class DashBoard extends Component {
     this.handle_click = this.handle_click.bind(this)
   }
 
-  createList (paths = []) {
+  createList (paths) {
     let that = this
     let back = []
-    let add_back_button = !this.state['currentFolder'] == 'Colleges'
+    let add_back_button = !(this.state['currentFolder'] == 'Colleges')
 
     if (add_back_button) {
       back = [
