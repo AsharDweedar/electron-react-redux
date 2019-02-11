@@ -13,15 +13,16 @@ export default class DashBoard extends Component {
     console.log(props)
 
     this.state = {
-      full_path: '/',
-      currentFolder: '/'
+      full_path: this.props.file['full_path'],
+      currentFolder: this.props.file['currentFolder']
     }
     this.handle_click = this.handle_click.bind(this)
   }
 
-  createList (paths = [], add_back_button = true) {
-    var that = this
-    var back = []
+  createList (paths = []) {
+    let that = this
+    let back = []
+    let add_back_button = !this.state['currentFolder'] == 'Colleges'
 
     if (add_back_button) {
       back = [
@@ -60,11 +61,18 @@ export default class DashBoard extends Component {
     let [{ value }] = ele.tags
     console.log('folder name  ::::::: ', value)
     var newFullPath = path.join(this.state.full_path, value)
-    this.setState({
-      ...this.state,
-      currentFolder: value,
-      full_path: newFullPath
-    })
+    this.state.currentFolder = value
+    this.state.full_path = newFullPath
+    this.props.navigate(newFullPath, value)
+  }
+
+  navigate_back () {
+    var oldFullPathList = this.state.full_path.split('/')
+    oldFullPathList.pop()
+    var currentFolder = oldFullPathList[oldFullPathList.length - 1]
+    this.state.currentFolder = currentFolder
+    this.state.full_path = oldFullPathList.join('/')
+    this.props.navigate(oldFullPathList.join('/'), currentFolder)
   }
 
   handle_download (ele) {
@@ -79,17 +87,6 @@ export default class DashBoard extends Component {
     downloader.setAttribute('download', name)
     downloader.setAttribute('href', data)
     downloader.click()
-  }
-
-  navigate_back () {
-    var oldFullPathList = this.state.full_path.split('/')
-    oldFullPathList.pop()
-    var currentFolder = oldFullPathList[oldFullPathList.length - 1]
-    this.setState({
-      ...this.state,
-      currentFolder: currentFolder,
-      full_path: oldFullPathList.length == 1 ? '/' : oldFullPathList.join('/')
-    })
   }
 
   handle_click (index) {
@@ -108,7 +105,7 @@ export default class DashBoard extends Component {
   }
 
   renderGallery (paths) {
-    let images = this.createList(paths, this.state.full_path != '/')
+    let images = this.createList(paths)
     this.state.images = images
 
     return (
@@ -134,17 +131,11 @@ export default class DashBoard extends Component {
   renderBreadCrumbs (full_path, status) {
     switch (status) {
       case 'Done':
-        return full_path != '/' ? (
+        return (
           <Breadcrumb className='black'>
             {full_path.split('/').reduce(function (acc, name) {
-              return name == '/'
-                ? acc
-                : acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+              return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
             }, [])}
-          </Breadcrumb>
-        ) : (
-          <Breadcrumb className='black'>
-            <MenuItem>{''}</MenuItem>
           </Breadcrumb>
         )
       case 'Loading':
@@ -162,7 +153,11 @@ export default class DashBoard extends Component {
         )
 
       default:
-        break
+        return (
+          <Breadcrumb className='black'>
+            <MenuItem>{''}</MenuItem>
+          </Breadcrumb>
+        )
     }
   }
   render () {
@@ -171,7 +166,7 @@ export default class DashBoard extends Component {
     console.log('state in render method :............ ')
     console.log(this.state)
     let fetched = this.props['file']['fetched']
-    let full_path = this.state['full_path']
+    let full_path = this.props['file']['full_path']
     let current = fetched[full_path] || {}
 
     return (

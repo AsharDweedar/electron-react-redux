@@ -29,15 +29,15 @@ const ext_to_icon = {
 }
 
 const mapStateToProps = state => {
- var new_state = { ...state, ext_to_icon }
+  var new_state = { ...state, ext_to_icon }
   return new_state
 }
 
 const mapDispatchToProps = dispatch => {
   const file = bindActionCreators(fileActions, dispatch)
   return {
-    fetch: (path = '/') => {
-      console.log("calling detch with path : ")
+    fetch: path => {
+      console.log('calling fetch with path : ')
       console.log(path)
       file.fetchStart({ path })
       return s3
@@ -50,6 +50,16 @@ const mapDispatchToProps = dispatch => {
     },
     reset: () => {
       return file.reset()
+    },
+    navigate: (full_path, currentFolder) => {
+      file.navigate({ currentFolder, full_path })
+      return s3
+        .ls(path)
+        .then(list => {
+          file.fetchDone({ list, path })
+          return list
+        })
+        .catch(error => file.fetchFailed({ message: error, path }))
     }
   }
 }

@@ -5,16 +5,16 @@ import * as s3 from '../helpers/s3_fake'
 export default handleActions(
   {
     [actions.fetchStart]: function (state, { payload: { path } }) {
-        console.log("select start")
-        console.log(path)
+      console.log('select start')
+      console.log(path)
       return {
         ...state,
         fetched: { ...state['fetched'], [path]: { status: 'Loading' } }
       }
     },
     [actions.fetchDone]: function (state, { payload: { path, list } }) {
-        console.log("path in fetching done ")
-        console.log(path)
+      console.log('path in fetching done ')
+      console.log(path)
       return {
         ...state,
         fetched: {
@@ -35,9 +35,12 @@ export default handleActions(
     [actions.fetch]: function (state, action) {
       return { ...state }
     },
+    [actions.navigate]: function (state, { payload: { currentFolder, full_path }}) {
+      return { ...state, currentFolder, full_path }
+    },
     [actions.reset]: (state, action) => {
       return { ...state, ...action.payload }
     }
   },
-  { fetched: {} }
+  { fetched: {}, full_path: 'Colleges', currentFolder: 'Colleges' }
 )

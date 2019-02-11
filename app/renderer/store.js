@@ -1,47 +1,60 @@
-import { createStore, applyMiddleware, combineReducers, compose } from 'redux';
-import { connectRouter, routerMiddleware, push } from 'connected-react-router';
-import persistState from 'redux-localstorage';
-import thunk from 'redux-thunk';
+import { createStore, applyMiddleware, combineReducers, compose } from 'redux'
+import { connectRouter, routerMiddleware, push } from 'connected-react-router'
+import persistState from 'redux-localstorage'
+import thunk from 'redux-thunk'
 
-import user from './reducers/user';
-import file from './reducers/file';
-import userActions from './actions/user';
-import fileActions from './actions/file';
+import user from './reducers/user'
+import file from './reducers/file'
+import userActions from './actions/user'
+import fileActions from './actions/file'
 
-export default function configureStore(initialState, routerHistory) {
-  const router = routerMiddleware(routerHistory);
+export default function configureStore (initialState, routerHistory) {
+  const router = routerMiddleware(routerHistory)
 
   const actionCreators = {
     ...userActions,
     ...fileActions,
-    push,
-  };
+    push
+  }
 
   const reducers = {
     router: connectRouter(routerHistory),
     user,
     file
-  };
+  }
 
-  const middlewares = [thunk, router];
+  const middlewares = [thunk, router]
 
   const composeEnhancers = (() => {
-    const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+    const compose_ = window && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
     if (process.env.NODE_ENV === 'development' && compose_) {
-      return compose_({ actionCreators });
+      return compose_({ actionCreators })
     }
-    return compose;
-  })();
+    return compose
+  })()
 
-  const enhancer = composeEnhancers(applyMiddleware(...middlewares), persistState());
-  const appReducer = combineReducers(reducers);
+  const enhancer = composeEnhancers(
+    applyMiddleware(...middlewares),
+    persistState()
+  )
+  const appReducer = combineReducers(reducers)
   const rootReducer = (state, action) => {
     if (action.type == 'FILE_RESET') {
-      console.log("resetting state ")
-      state = { ...state, file: { fetched: {} }}
+      console.log('resetting state ')
+      state = {
+        ...state,
+        file: { fetched: {}, full_path: 'Colleges', currentFolder: 'Colleges' }
+      }
+    }
+    if (action.type == 'USER_LOGOUT') {
+      console.log('resetting state ')
+      state = {
+        ...state,
+        user: { loggedIn: false, username: "" }
+      }
     }
     return appReducer(state, action)
   }
 
-  return createStore(rootReducer, initialState, enhancer);
+  return createStore(rootReducer, initialState, enhancer)
 }
