@@ -11,7 +11,20 @@ module.exports = {
     '@babel/preset-react',
   ],
   plugins: [
-    ['import-static-files'],
+    ['import-static-files', {
+      "baseDir": "/static",
+      "hash": false,
+      "extensions": [
+        ".gif",
+        ".jpeg",
+        ".jpg",
+        ".png",
+        ".svg"
+      ],
+      "srcDir": "",
+      "outDir": ""
+    }
+],
     ['@babel/plugin-proposal-decorators', { legacy: true }],
     ['@babel/plugin-proposal-class-properties', { loose: true }],
   ],

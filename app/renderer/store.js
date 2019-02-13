@@ -40,14 +40,12 @@ export default function configureStore (initialState, routerHistory) {
   const appReducer = combineReducers(reducers)
   const rootReducer = (state, action) => {
     if (action.type == 'FILE_RESET') {
-      console.log('resetting state ')
       state = {
         ...state,
         file: { fetched: {}, full_path: 'Colleges', currentFolder: 'Colleges' }
       }
     }
     if (action.type == 'USER_LOGOUT') {
-      console.log('resetting state ')
       state = {
         ...state,
         user: { loggedIn: false, username: "" }

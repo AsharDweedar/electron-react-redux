@@ -9,8 +9,6 @@ import Async from 'react-async'
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
-    console.log('props inside dashboard ///////////////////////')
-    console.log(props)
 
     this.state = {
       full_path: this.props.file['full_path'],
@@ -36,8 +34,6 @@ export default class DashBoard extends Component {
         }
       ]
     }
-    console.log('paths')
-    console.log(JSON.stringify(paths))
     paths = isArray(paths) ? paths : paths.value
     return back.concat(
       (paths || []).map(function ({ key }) {
@@ -57,9 +53,7 @@ export default class DashBoard extends Component {
   }
 
   handle_navigate (ele) {
-    console.log('handle_navigate')
     let [{ value }] = ele.tags
-    console.log('folder name  ::::::: ', value)
     var newFullPath = path.join(this.props.file.full_path, value)
     this.state.currentFolder = value
     this.state.full_path = newFullPath
@@ -90,7 +84,6 @@ export default class DashBoard extends Component {
   }
 
   handle_click (index) {
-    console.log('index', index, '.................................')
     let ele = this.state.images[index]
     switch (ele.type) {
       case 'folder':
@@ -161,10 +154,6 @@ export default class DashBoard extends Component {
     }
   }
   render () {
-    console.log('props in render method :............ ')
-    console.log(this.props)
-    console.log('state in render method :............ ')
-    console.log(this.state)
     let fetched = this.props['file']['fetched']
     let full_path = this.props['file']['full_path']
     let current = fetched[full_path] || {}

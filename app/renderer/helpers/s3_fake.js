@@ -14,7 +14,6 @@ const mocked = {
   'Colleges/2/5/6': [{ key: '6.png' }, { key: '6.doc' }, { key: '6.jpg' }]
 }
 function resolver(cb, path) {
-  console.log("oooooooooooooooooooooooooooooooooooooooooooooooooooo")
   return cb(mocked[path])
 }
 module.exports = {

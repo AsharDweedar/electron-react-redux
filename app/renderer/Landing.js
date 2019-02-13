@@ -5,6 +5,9 @@ import Tail from './containers/Tail'
 import Floating from './containers/Floating'
 
 export default class Landing extends Component {
+  constructor(props) {
+    super(props)
+  }
   render () {
     return (
       <div>

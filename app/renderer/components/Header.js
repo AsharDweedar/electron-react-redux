@@ -1,18 +1,12 @@
 import React, { Component } from 'react'
 // import User from './User'
-import {
-  Navbar,
-  NavItem,
-  Icon,
-  Dropdown,
-  SideNav,
-  SideNavItem,
-  Button
-} from 'react-materialize'
+import { Navbar, NavItem, Icon, Button } from 'react-materialize'
 import PropTypes from 'prop-types'
-import Logo from '../helpers/logo.jpg'
-
+import Logo from '../helpers/logo.png'
 export default class Header extends Component {
+  constructor (props) {
+    super(props)
+  }
   static propTypes = {
     onLogout: PropTypes.func.isRequired,
     router: PropTypes.func.isRequired
@@ -26,14 +20,14 @@ export default class Header extends Component {
   }
 
   render () {
-    var hidden_triggerer = <Button style={{ display: 'none' }}>Hidden</Button>
-    var triggerer = (
-      <NavItem>
-        <Icon onClick={hidden_triggerer}>more_vert</Icon>
-      </NavItem>
+    const Img = (
+      <img
+        src={Logo}
+        alt={'logo'}
+        height={'35px'}
+        onClick={e => e.stopPropagation()}
+      />
     )
-
-    const Img = <img src={Logo} alt={'logo'} />
     const router = path => this.props.router(path)
     return (
       <div>

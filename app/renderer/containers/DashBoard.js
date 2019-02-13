@@ -37,8 +37,6 @@ const mapDispatchToProps = dispatch => {
   const file = bindActionCreators(fileActions, dispatch)
   return {
     fetch: path => {
-      console.log('calling fetch with path : ')
-      console.log(path)
       file.fetchStart({ path })
       return s3
         .ls(path)
@@ -52,10 +50,7 @@ const mapDispatchToProps = dispatch => {
       return file.reset()
     },
     navigate: (path, currentFolder, isFetch) => {
-      console.log('calling navigate inside map dispatch to props')
       file.navigate({ currentFolder, full_path: path })
-      console.log('end of --- calling navigate inside map dispatch to props')
-      console.log(isFetch, 'isFetch')
       if (!isFetch) return
       file.fetchStart({ path })
       s3.ls(path)

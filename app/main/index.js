@@ -1,5 +1,5 @@
 import path from 'path'
-import { app, crashReporter, BrowserWindow, Menu } from 'electron'
+import { app, crashReporter, BrowserWindow, Menu, protocol } from 'electron'
 
 const isDevelopment = process.env.NODE_ENV === 'development'
 
@@ -19,12 +19,12 @@ const installExtensions = async () => {
   }
 }
 
-crashReporter.start({
-  productName: 'YourName',
-  companyName: 'YourCompany',
-  submitURL: 'https://your-domain.com/url-to-submit',
-  uploadToServer: false
-})
+// crashReporter.start({
+//   productName: 'YourName',
+//   companyName: 'YourCompany',
+//   submitURL: 'https://your-domain.com/url-to-submit',
+//   uploadToServer: false
+// })
 
 app.on('window-all-closed', () => {
   // On OS X it is common for applications and their menu bar
@@ -44,11 +44,24 @@ app.on('ready', async () => {
     height: 800,
     minWidth: 640,
     minHeight: 480,
-    show: false
+    show: false,
+    icon: process.cwd() + '/icon.png'
   })
 
   mainWindow.loadFile(
     path.resolve(path.join(__dirname, '../renderer/index.html'))
+  )
+  protocol.interceptFileProtocol(
+    'file',
+    (request, callback) => {
+      const url = request.url.substr(7) /* all urls start with 'file://' */
+      let full =
+        url.indexOf('static') >= 0 ? path.join(process.cwd(), url) : url
+      callback({ path: path.normalize(full) })
+    },
+    err => {
+      if (err) console.error('Failed to register protocol')
+    }
   )
 
   // show window once on first load
@@ -83,35 +96,32 @@ app.on('ready', async () => {
     }
   })
 
-  mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
-    // Set the save path, making Electron not to prompt a save dialog.
-    // console.log("event")
-    // console.log(event)
-    // console.log("item")
-    // console.log(item)
-    // console.log("webContents")
-    // console.log(webContents)
-    // item.setSavePath('/tmp/save.pdf')
+  mainWindow.webContents.session.on(
+    'will-download',
+    (event, item, webContents) => {
+      // Set the save path, making Electron not to prompt a save dialog.
+      // item.setSavePath('/tmp/save.pdf')
 
-    item.on('updated', (event, state) => {
-      if (state === 'interrupted') {
-        console.log('Download is interrupted but can be resumed')
-      } else if (state === 'progressing') {
-        if (item.isPaused()) {
-          console.log('Download is paused')
-        } else {
-          console.log(`Received bytes: ${item.getReceivedBytes()}`)
+      item.on('updated', (event, state) => {
+        if (state === 'interrupted') {
+          console.log('Download is interrupted but can be resumed')
+        } else if (state === 'progressing') {
+          if (item.isPaused()) {
+            console.log('Download is paused')
+          } else {
+            console.log(`Received bytes: ${item.getReceivedBytes()}`)
+          }
         }
-      }
-    })
-    item.once('done', (event, state) => {
-      if (state === 'completed') {
-        console.log('Download successfully')
-      } else {
-        console.log(`Download failed: ${state}`)
-      }
-    })
-  })
+      })
+      item.once('done', (event, state) => {
+        if (state === 'completed') {
+          console.log('Download successfully')
+        } else {
+          console.log(`Download failed: ${state}`)
+        }
+      })
+    }
+  )
 
   if (isDevelopment) {
     // auto-open dev tools

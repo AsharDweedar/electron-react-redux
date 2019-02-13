@@ -5,16 +5,12 @@ import * as s3 from '../helpers/s3_fake'
 export default handleActions(
   {
     [actions.fetchStart]: function (state, { payload: { path } }) {
-      console.log('select start')
-      console.log(path)
       return {
         ...state,
         fetched: { ...state['fetched'], [path]: { status: 'Loading' } }
       }
     },
     [actions.fetchDone]: function (state, { payload: { path, list } }) {
-      console.log('path in fetching done ')
-      console.log(path)
       return {
         ...state,
         fetched: {
