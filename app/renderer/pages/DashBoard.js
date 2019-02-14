@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import path from 'path'
 import { isArray, isFunction } from 'util'
 import Async from 'react-async'
-
+import styles from './DashBoard.css'
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
@@ -193,7 +193,7 @@ export default class DashBoard extends Component {
                   return this.props.fetch(full_path)
                 }.bind(this)}
               >
-                Fetcher
+                Brows Colleges
               </Button>
             </span>
           )}
