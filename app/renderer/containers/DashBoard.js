@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { path } from 'path'
 import { bindActionCreators } from 'redux'
 import * as s3 from '../helpers/s3_fake'
 
@@ -36,29 +37,24 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   const file = bindActionCreators(fileActions, dispatch)
   return {
-    fetch: path => {
-      file.fetchStart({ path })
-      return s3
-        .ls(path)
-        .then(list => {
-          file.fetchDone({ list, path })
-          return list
-        })
-        .catch(error => file.fetchFailed({ message: error, path }))
+    fetch: fullPath => {
+      let {dir, name} = path.parse(fullPath)
+      file.fetchStart({ fullPath })
+      return s3.getFile(fullPath)
     },
     reset: () => {
       return file.reset()
     },
-    navigate: (path, currentFolder, isFetch) => {
-      file.navigate({ currentFolder, full_path: path })
-      if (!isFetch) return
-      file.fetchStart({ path })
-      s3.ls(path)
+    navigate: (fullPath, currentFolder, isFetch) => {
+      file.navigate({ currentFolder, fullPath: fullPath })
+      if (!isFetch) return console.log("already fetched")
+      file.fetchStart({ fullPath })
+      s3.ls(fullPath)
         .then(list => {
-          file.fetchDone({ list, path })
+          file.fetchDone({ list, fullPath })
           return list
         })
-        .catch(error => file.fetchFailed({ message: error, path }))
+        .catch(error => file.fetchFailed({ message: error, fullPath }))
     }
   }
 }

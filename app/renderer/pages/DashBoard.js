@@ -2,19 +2,19 @@ import React, { Component } from 'react'
 import { Breadcrumb, MenuItem, Preloader, Button } from 'react-materialize'
 import Gallery from 'react-grid-gallery'
 import PropTypes from 'prop-types'
+// import { Document } from 'react-pdf'
 import path from 'path'
-import { isArray, isFunction } from 'util'
-import Async from 'react-async'
-import styles from './DashBoard.css'
+import { isArray } from 'util'
+
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      full_path: this.props.file['full_path'],
+      fullPath: this.props.file['fullPath'],
       currentFolder: this.props.file['currentFolder']
     }
-    this.handle_click = this.handle_click.bind(this)
+    this.handleClick = this.handleClick.bind(this)
   }
 
   createList (paths) {
@@ -52,25 +52,53 @@ export default class DashBoard extends Component {
     )
   }
 
-  handle_navigate (ele) {
+  handleNavigate (ele) {
     let [{ value }] = ele.tags
-    var newFullPath = path.join(this.props.file.full_path, value)
+    var newFullPath = path.join(this.props.file.fullPath, value)
     this.state.currentFolder = value
-    this.state.full_path = newFullPath
-    this.props.navigate(newFullPath, value, !this.props.file[newFullPath])
+    this.state.fullPath = newFullPath
+    this.props.navigate(
+      newFullPath,
+      value,
+      !this.props.file.fetched[newFullPath]
+    )
   }
 
-  navigate_back () {
-    var oldFullPathList = this.state.full_path.split('/')
+  navigateBack () {
+    var oldFullPathList = this.state.fullPath.split('/')
     oldFullPathList.pop()
     var currentFolder = oldFullPathList[oldFullPathList.length - 1]
     this.state.currentFolder = currentFolder
-    this.state.full_path = oldFullPathList.join('/')
+    this.state.fullPath = oldFullPathList.join('/')
     this.props.navigate(oldFullPathList.join('/'), currentFolder, false)
   }
 
-  handle_download (ele) {
+  viewPDF (name) {
+    let filePath = path.join(process.cwd(), path.join(this.fullPath, name))
+    let content = this.props.fetch(filePath)
+    // return <Document file={content} />
+  }
+
+  handleView (ele) {
     var name = ele.tags[0]['value']
+    switch (path.extname(name)) {
+      case '.pdf':
+        component = this.viewPDF(name)
+        break
+
+      case '.txt':
+        component = this.viewTXT(name)
+        break
+
+      default:
+        component = this.viewImage(name)
+        break
+    }
+  }
+
+  handleDownload (ele) {
+    var name = ele.tags[0]['value']
+    // TODO: change 'HI' for downloadable content
     var info = {
       filename: name,
       content: 'HI'
@@ -83,17 +111,18 @@ export default class DashBoard extends Component {
     downloader.click()
   }
 
-  handle_click (index) {
+  handleClick (index) {
     let ele = this.state.images[index]
     switch (ele.type) {
       case 'folder':
-        this.handle_navigate(ele)
+        this.handleNavigate(ele)
         break
       case 'file':
-        this.handle_download(ele)
+        // this.handleDownload(ele)
+        this.handleView(ele)
         break
       default:
-        this.navigate_back()
+        this.navigateBack()
     }
   }
 
@@ -109,7 +138,7 @@ export default class DashBoard extends Component {
           enableImageSelection={false}
           margin={15}
           rowHeight={80}
-          onClickThumbnail={this.handle_click}
+          onClickThumbnail={this.handleClick}
         />
         <a
           style={{ display: 'none' }}
@@ -121,42 +150,31 @@ export default class DashBoard extends Component {
     )
   }
 
-  renderBreadCrumbs (full_path, status) {
-    switch (status) {
-      case 'Done':
-        return (
-          <Breadcrumb className='black'>
-            {full_path.split('/').reduce(function (acc, name) {
-              return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
-            }, [])}
-          </Breadcrumb>
-        )
-      case 'Loading':
-        return (
-          <Breadcrumb className='black'>
-            <MenuItem>{'Loading ...'}</MenuItem>
-          </Breadcrumb>
-        )
-
-      case 'Failed':
-        return (
-          <Breadcrumb className='black'>
-            <MenuItem>{'Failed !!'}</MenuItem>
-          </Breadcrumb>
-        )
-
-      default:
-        return (
-          <Breadcrumb className='black'>
-            <MenuItem>{''}</MenuItem>
-          </Breadcrumb>
-        )
+  renderBreadCrumbs (fullPath, status) {
+    const statuses = {
+      Loading: 'Loading ...',
+      Failed: 'Failed !!'
+    }
+    if (status == 'Done') {
+      return (
+        <Breadcrumb className='black'>
+          {fullPath.split('/').reduce(function (acc, name) {
+            return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+          }, [])}
+        </Breadcrumb>
+      )
+    } else {
+      return (
+        <Breadcrumb className='black'>
+          <MenuItem>{statuses[status] || ''}</MenuItem>
+        </Breadcrumb>
+      )
     }
   }
   render () {
-    let fetched = this.props['file']['fetched']
-    let full_path = this.props['file']['full_path']
-    let current = fetched[full_path] || {}
+    console.log(this.props)
+    let { currentFolder, fullPath, fetched } = this.props.file
+    let current = fetched[fullPath] || {}
 
     return (
       <div>
@@ -167,12 +185,13 @@ export default class DashBoard extends Component {
             display: 'block',
             minHeight: '1px',
             width: '80%',
-            border: '5px solid #ddd',
+            border: '5px solid #CCC',
             overflow: 'auto',
-            margin: 'auto'
+            margin: 'auto',
+            background: '#EEE'
           }}
         >
-          {this.renderBreadCrumbs(full_path, current['status'])}
+          {this.renderBreadCrumbs(fullPath, current['status'])}
           {current['status'] == 'Loading' && (
             <span
               style={{
@@ -190,7 +209,7 @@ export default class DashBoard extends Component {
             <span>
               <Button
                 onClick={function () {
-                  return this.props.fetch(full_path)
+                  return this.props.navigate(fullPath, currentFolder, true)
                 }.bind(this)}
               >
                 Brows Colleges

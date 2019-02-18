@@ -42,7 +42,7 @@ export default function configureStore (initialState, routerHistory) {
     if (action.type == 'FILE_RESET') {
       state = {
         ...state,
-        file: { fetched: {}, full_path: 'Colleges', currentFolder: 'Colleges' }
+        file: { fetched: {}, fullPath: 'Colleges', currentFolder: 'Colleges' }
       }
     }
     if (action.type == 'USER_LOGOUT') {

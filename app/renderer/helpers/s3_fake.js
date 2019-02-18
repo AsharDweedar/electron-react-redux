@@ -13,11 +13,14 @@ const mocked = {
   'Colleges/2/5': [{ key: '5.png' }, { key: '6' }],
   'Colleges/2/5/6': [{ key: '6.png' }, { key: '6.doc' }, { key: '6.jpg' }]
 }
-function resolver(cb, path) {
-  return cb(mocked[path])
+function resolver(cb, fullPath) {
+  return cb(mocked[fullPath])
 }
 module.exports = {
-  ls: function (path) {
-    return new Promise(resolve => setTimeout(() => resolver(resolve, path), 500))
+  ls: function (fullPath) {
+    return new Promise(resolve => setTimeout(() => resolver(resolve, fullPath), 500))
+  },
+  getFile: function (fullPath) {
+    return new Promise(resolve => setTimeout(() => resolver(resolve, `content for fullPath: ${fullPath}`), 500))
   }
 }

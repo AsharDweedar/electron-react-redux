@@ -1,42 +1,44 @@
 import { handleActions } from 'redux-actions'
 import actions from '../actions/file'
-import * as s3 from '../helpers/s3_fake'
 
 export default handleActions(
   {
-    [actions.fetchStart]: function (state, { payload: { path } }) {
+    [actions.fetchStart]: function (state, { payload: { fullPath } }) {
       return {
         ...state,
-        fetched: { ...state['fetched'], [path]: { status: 'Loading' } }
+        fetched: { ...state['fetched'], [fullPath]: { status: 'Loading' } }
       }
     },
-    [actions.fetchDone]: function (state, { payload: { path, list } }) {
+    [actions.fetchDone]: function (state, { payload: { fullPath, list } }) {
       return {
         ...state,
         fetched: {
           ...state['fetched'],
-          [path]: { status: 'Done', paths: list }
+          [fullPath]: { status: 'Done', paths: list }
         }
       }
     },
-    [actions.fetchFailed]: function (state, { payload: { path, message } }) {
+    [actions.fetchFailed]: function (state, { payload: { fullPath, message } }) {
       return {
         ...state,
         fetched: {
           ...state['fetched'],
-          [path]: { status: 'Failed', message }
+          [fullPath]: { status: 'Failed', message }
         }
       }
     },
     [actions.fetch]: function (state, action) {
       return { ...state }
     },
-    [actions.navigate]: function (state, { payload: { currentFolder, full_path }}) {
-      return { ...state, currentFolder, full_path }
+    [actions.navigate]: function (
+      state,
+      { payload: { currentFolder, fullPath } }
+    ) {
+      return { ...state, currentFolder, fullPath }
     },
     [actions.reset]: (state, action) => {
       return { ...state, ...action.payload }
     }
   },
-  { fetched: {}, full_path: 'Colleges', currentFolder: 'Colleges' }
+  { fetched: {}, fullPath: 'Colleges', currentFolder: 'Colleges' }
 )
