@@ -18,6 +18,18 @@ export default handleActions(
         }
       }
     },
+    [actions.fetchFileDone]: function (
+      state,
+      { payload: { writePath, fullPath } }
+    ) {
+      return {
+        ...state,
+        fetched: {
+          ...state['fetched'],
+          [fullPath]: { status: 'Done', file: writePath }
+        }
+      }
+    },
     [actions.fetchFailed]: function (state, { payload: { fullPath, message } }) {
       return {
         ...state,
@@ -30,15 +42,17 @@ export default handleActions(
     [actions.fetch]: function (state, action) {
       return { ...state }
     },
-    [actions.navigate]: function (
-      state,
-      { payload: { currentFolder, fullPath } }
-    ) {
-      return { ...state, currentFolder, fullPath }
+    [actions.navigate]: function (state, { payload }) {
+      return { ...state, ...payload }
     },
     [actions.reset]: (state, action) => {
       return { ...state, ...action.payload }
     }
   },
-  { fetched: {}, fullPath: 'Colleges', currentFolder: 'Colleges',type: 'folder' }
+  {
+    fetched: {},
+    fullPath: 'Colleges',
+    currentFolder: 'Colleges',
+    type: 'folder'
+  }
 )

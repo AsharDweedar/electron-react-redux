@@ -38,14 +38,17 @@ const mapDispatchToProps = dispatch => {
   const file = bindActionCreators(fileActions, dispatch)
   return {
     fetch: fullPath => {
-      console.log("path ..........................")
-      console.log(path)
       let currentFolder = path.basename(fullPath)
       file.navigate({ currentFolder, fullPath, type: 'file' })
       file.fetchStart({ fullPath })
       return s3
         .getFile(fullPath)
-        .then(() => file.fetchDone(fullPath))
+        .then(({fullPath, writePath}) => {
+          console.log('inside then , to call fetchFileDone')
+          console.log( fullPath)
+          console.log( writePath)
+          return file.fetchFileDone({ writePath, fullPath })
+        })
         .catch(message => file.fetchFailed({ message, fullPath }))
     },
     reset: () => {

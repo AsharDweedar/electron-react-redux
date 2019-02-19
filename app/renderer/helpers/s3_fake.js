@@ -26,17 +26,22 @@ module.exports = {
     )
   },
   getFile: function (fullPath) {
-    console.log("getting file ")
-    return new Promise(resolve => {
+    console.log('getting file ')
+    return new Promise((resolve, catcher) => {
       let writePath = path.join(__dirname, fullPath)
-      console.log(writePath)
-      fs.mkdirSync(path.dirname(writePath))
-      let cont = `content for fullPath: ${fullPath}, with writePath: ${writePath}`
-      fs.writeFile(writePath, cont, function (err, res) {
-        console.log('read file err 3333333 ', err)
-        console.log('read file res 3333333 ', res)
-        // TODO: handle error
-        resolve(fullPath)
+      console.log('writePath')
+      console.log(JSON.stringify(writePath))
+      return fs.mkdir(path.dirname(writePath), function (err, res) {
+        let cont = `content for fullPath: ${fullPath}, with writePath: ${writePath}`
+        return fs.writeFile(writePath, cont, function (err, res) {
+          console.log('read file err 3333333 ')
+          if (err )  return catcher(err)
+          console.log(err)
+          console.log('read file res 3333333 ')
+          console.log(res)
+          // TODO: handle error
+          return resolve({writePath, fullPath})
+        })
       })
     })
   }

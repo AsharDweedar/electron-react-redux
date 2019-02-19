@@ -4,7 +4,7 @@ import Gallery from 'react-grid-gallery'
 import PropTypes from 'prop-types'
 import path from 'path'
 import { isArray } from 'util'
-import { viewPDF } from '../components/PDFViewer'
+import { ViewPDF } from '../components/PDFViewer'
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
@@ -80,8 +80,7 @@ export default class DashBoard extends Component {
     if (!this.props.file['fetched'][newFullPath]) {
       console.log('newFullPath')
       console.log(newFullPath)
-      this.props.fetch(newFullPath)
-      return
+      return this.props.fetch(newFullPath)
     }
     let { status, file } = this.props.file.fetched[newFullPath]
     switch (status) {
@@ -125,14 +124,14 @@ export default class DashBoard extends Component {
     let ele = this.state.images[index]
     switch (ele.type) {
       case 'folder':
-        this.handleNavigate(ele)
-        break
+        return this.handleNavigate(ele)
+
       case 'file':
         // this.handleDownload(ele)
-        this.handleView(ele)
-        break
+        return this.handleView(ele)
+
       default:
-        this.navigateBack()
+        return this.navigateBack()
     }
   }
 
@@ -214,7 +213,7 @@ export default class DashBoard extends Component {
     )
   }
 
-  viewImage(filePath) {
+  viewImage (filePath) {
     return <img src={filePath} />
   }
 
@@ -222,7 +221,8 @@ export default class DashBoard extends Component {
     let { ext } = path.parse(currentFolder)
     switch (ext) {
       case '.pdf':
-        return <viewPDF filePath={fetched[fullPath]['file']} />
+        return <span>{fetched[fullPath]['file'] || ''}</span>
+      // return <ViewPDF filepath={(fetched[fullPath]['file'] || "")} />
       case '.txt':
         return file.readFile(fetched[fullPath]['file'], function (err, res) {
           console.log('done reading file')
