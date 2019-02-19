@@ -40,5 +40,5 @@ export default handleActions(
       return { ...state, ...action.payload }
     }
   },
-  { fetched: {}, fullPath: 'Colleges', currentFolder: 'Colleges' }
+  { fetched: {}, fullPath: 'Colleges', currentFolder: 'Colleges',type: 'folder' }
 )

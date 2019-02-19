@@ -2,10 +2,9 @@ import React, { Component } from 'react'
 import { Breadcrumb, MenuItem, Preloader, Button } from 'react-materialize'
 import Gallery from 'react-grid-gallery'
 import PropTypes from 'prop-types'
-// import { Document } from 'react-pdf'
 import path from 'path'
 import { isArray } from 'util'
-
+import { viewPDF } from '../components/PDFViewer'
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
@@ -20,7 +19,7 @@ export default class DashBoard extends Component {
   createList (paths) {
     let that = this
     let back = []
-    let add_back_button = !(this.state['currentFolder'] == 'Colleges')
+    let add_back_button = path.dirname(this.state['currentFolder']) != '.'
 
     if (add_back_button) {
       back = [
@@ -73,25 +72,36 @@ export default class DashBoard extends Component {
     this.props.navigate(oldFullPathList.join('/'), currentFolder, false)
   }
 
-  viewPDF (name) {
-    let filePath = path.join(process.cwd(), path.join(this.fullPath, name))
-    let content = this.props.fetch(filePath)
-    // return <Document file={content} />
-  }
-
   handleView (ele) {
-    var name = ele.tags[0]['value']
-    switch (path.extname(name)) {
-      case '.pdf':
-        component = this.viewPDF(name)
+    let fileWithExt = ele.tags[0]['value']
+    let fullPath = this.props.file['currentFolder']
+    let newFullPath = path.join(fullPath, fileWithExt)
+
+    if (!this.props.file['fetched'][newFullPath]) {
+      console.log('newFullPath')
+      console.log(newFullPath)
+      this.props.fetch(newFullPath)
+      return
+    }
+    let { status, file } = this.props.file.fetched[newFullPath]
+    switch (status) {
+      case 'Failed':
+        alert('Failed To get File')
         break
 
-      case '.txt':
-        component = this.viewTXT(name)
+      case 'Done':
+        this.setState({
+          ...this.state,
+          fullPath: newFullPath,
+          currentFolder: fileWithExt
+        })
+        break
+
+      case 'Loading':
+        alert('Loading File, this should never match ...')
         break
 
       default:
-        component = this.viewImage(name)
         break
     }
   }
@@ -171,9 +181,60 @@ export default class DashBoard extends Component {
       )
     }
   }
+
+  renderList ({ currentFolder, fullPath, fetched }) {
+    let current = fetched[fullPath] || {}
+    return (
+      <div>
+        {current['status'] == 'Loading' && (
+          <span
+            style={{
+              border: '1px solid red',
+              display: 'inline-block',
+              margin: 'auto',
+              width: '30%'
+            }}
+          >
+            <Preloader size='big' />
+          </span>
+        )}
+        {current['status'] == 'Done' && this.renderGallery(current['paths'])}
+        {current['status'] == undefined && (
+          <span>
+            <Button
+              onClick={function () {
+                return this.props.navigate(fullPath, currentFolder, true)
+              }.bind(this)}
+            >
+              Brows Colleges
+            </Button>
+          </span>
+        )}
+      </div>
+    )
+  }
+
+  viewImage(filePath) {
+    return <img src={filePath} />
+  }
+
+  renderFile ({ currentFolder, fullPath, fetched }) {
+    let { ext } = path.parse(currentFolder)
+    switch (ext) {
+      case '.pdf':
+        return <viewPDF filePath={fetched[fullPath]['file']} />
+      case '.txt':
+        return file.readFile(fetched[fullPath]['file'], function (err, res) {
+          console.log('done reading file')
+        })
+      default:
+        return this.viewImage(fetched[fullPath]['file'])
+    }
+  }
+
   render () {
     console.log(this.props)
-    let { currentFolder, fullPath, fetched } = this.props.file
+    let { type, fullPath, fetched } = this.props.file
     let current = fetched[fullPath] || {}
 
     return (
@@ -192,30 +253,8 @@ export default class DashBoard extends Component {
           }}
         >
           {this.renderBreadCrumbs(fullPath, current['status'])}
-          {current['status'] == 'Loading' && (
-            <span
-              style={{
-                border: '1px solid red',
-                display: 'inline-block',
-                margin: 'auto',
-                width: '30%'
-              }}
-            >
-              <Preloader size='big' />
-            </span>
-          )}
-          {current['status'] == 'Done' && this.renderGallery(current['paths'])}
-          {current['status'] == undefined && (
-            <span>
-              <Button
-                onClick={function () {
-                  return this.props.navigate(fullPath, currentFolder, true)
-                }.bind(this)}
-              >
-                Brows Colleges
-              </Button>
-            </span>
-          )}
+          {type == 'folder' && this.renderList(this.props.file)}
+          {type == 'file' && this.renderFile(this.props.file)}
         </div>
       </div>
     )
