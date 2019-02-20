@@ -5,6 +5,8 @@ import PropTypes from 'prop-types'
 import path from 'path'
 import { isArray } from 'util'
 import ViewPDF from '../components/PDFViewer'
+import Lightbox from 'react-image-lightbox'
+// import 'react-image-lightbox/style.css';
 
 export default class DashBoard extends Component {
   constructor (props) {
@@ -60,7 +62,8 @@ export default class DashBoard extends Component {
     this.props.navigate(
       newFullPath,
       value,
-      !this.props.file.fetched[newFullPath]
+      !this.props.file.fetched[newFullPath],
+      'folder'
     )
   }
 
@@ -70,31 +73,32 @@ export default class DashBoard extends Component {
     var currentFolder = oldFullPathList[oldFullPathList.length - 1]
     this.state.currentFolder = currentFolder
     this.state.fullPath = oldFullPathList.join('/')
-    this.props.navigate(oldFullPathList.join('/'), currentFolder, false)
+    this.props.navigate(
+      oldFullPathList.join('/'),
+      currentFolder,
+      false,
+      'folder'
+    )
   }
 
   handleView (ele) {
     let fileWithExt = ele.tags[0]['value']
-    let fullPath = this.props.file['currentFolder']
+    let fullPath = this.props.file['fullPath']
     let newFullPath = path.join(fullPath, fileWithExt)
 
     if (!this.props.file['fetched'][newFullPath]) {
-      console.log('newFullPath')
-      console.log(newFullPath)
       return this.props.fetch(newFullPath)
     }
-    let { status, file } = this.props.file.fetched[newFullPath]
+    let { status } = this.props.file.fetched[newFullPath]
     switch (status) {
       case 'Failed':
         alert('Failed To get File')
         break
 
       case 'Done':
-        this.setState({
-          ...this.state,
-          fullPath: newFullPath,
-          currentFolder: fileWithExt
-        })
+        this.state.fullPath = newFullPath
+        this.state.currentFolder = fileWithExt
+        this.props.navigate(newFullPath, fileWithExt, false, 'file')
         break
 
       case 'Loading':
@@ -123,6 +127,8 @@ export default class DashBoard extends Component {
 
   handleClick (index) {
     let ele = this.state.images[index]
+    console.log('handleClick')
+    console.log(ele)
     switch (ele.type) {
       case 'folder':
         return this.handleNavigate(ele)
@@ -204,7 +210,16 @@ export default class DashBoard extends Component {
   }
 
   viewImage (filePath) {
-    return <img src={filePath} />
+    return (
+      <Lightbox
+        mainSrc={filePath}
+        onCloseRequest={this.navigateBack.bind(this)}
+        onMovePrevRequest={function () {}}
+        onMoveNextRequest={function () {}}
+        nextSrc={''}
+        prevSrc={''}
+      />
+    )
   }
 
   renderFile ({ currentFolder, fullPath, fetched }) {
@@ -229,6 +244,7 @@ export default class DashBoard extends Component {
 
   render () {
     console.log(this.props)
+    console.log(this.state)
     let { type, fullPath, fetched } = this.props.file
     let current = fetched[fullPath] || {}
 

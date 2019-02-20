@@ -54,8 +54,8 @@ const mapDispatchToProps = dispatch => {
     reset: () => {
       return file.reset()
     },
-    navigate: (fullPath, currentFolder, isFetch) => {
-      file.navigate({ currentFolder, fullPath })
+    navigate: (fullPath, currentFolder, isFetch, type = 'folder') => {
+      file.navigate({ currentFolder, fullPath, type})
       if (!isFetch) return console.log('already fetched')
       file.fetchStart({ fullPath })
       s3.ls(fullPath)

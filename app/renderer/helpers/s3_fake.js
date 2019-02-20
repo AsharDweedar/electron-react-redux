@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+var shell = require('shelljs')
 
 const mocked = {
   Colleges: [{ key: '1' }, { key: '2' }, { key: '0.pdf' }],
@@ -27,21 +28,20 @@ module.exports = {
   },
   getFile: function (fullPath) {
     console.log('getting file ')
-    return new Promise((resolve, catcher) => {
+    return new Promise((resolve, reject) => {
       let writePath = path.join(process.cwd(), fullPath)
       console.log('writePath')
       console.log(JSON.stringify(writePath))
-      return fs.mkdir(path.dirname(writePath), function (err, res) {
-        let cont = `content for fullPath: ${fullPath}, with writePath: ${writePath}`
-        return fs.writeFile(writePath, cont, function (err, res) {
-          console.log('read file err 3333333 ')
-          if (err )  return catcher(err)
-          console.log(err)
-          console.log('read file res 3333333 ')
-          console.log(res)
-          // TODO: handle error
-          return resolve({writePath, fullPath})
-        })
+      shell.mkdir('-p', path.dirname(writePath))
+      let cont = `content for fullPath: ${fullPath}, with writePath: ${writePath}`
+      fs.writeFile(writePath, cont, function (err, res) {
+        console.log('read file err 3333333 ')
+        console.log(err)
+        if (err) return reject(err)
+        console.log('read file res 3333333 ')
+        console.log(res)
+        // TODO: handle error
+        return resolve({ writePath, fullPath })
       })
     })
   }
