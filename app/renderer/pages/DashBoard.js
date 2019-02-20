@@ -5,7 +5,8 @@ import PropTypes from 'prop-types'
 import path from 'path'
 import { isArray } from 'util'
 import ViewPDF from '../components/PDFViewer'
-import Lightbox from 'react-image-lightbox'
+// import Lightbox from 'react-image-lightbox'
+import { Lightbox } from 'react-modal-image'
 // import 'react-image-lightbox/style.css';
 
 export default class DashBoard extends Component {
@@ -210,16 +211,26 @@ export default class DashBoard extends Component {
   }
 
   viewImage (filePath) {
+    console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
+    console.log(filePath)
     return (
       <Lightbox
-        mainSrc={filePath}
-        onCloseRequest={this.navigateBack.bind(this)}
-        onMovePrevRequest={function () {}}
-        onMoveNextRequest={function () {}}
-        nextSrc={''}
-        prevSrc={''}
+        medium={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmfSdorY_1cntjEmgEXNXEJwxGi-nsY9fwJJUgipn3mulH5mcs'}
+        large={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmfSdorY_1cntjEmgEXNXEJwxGi-nsY9fwJJUgipn3mulH5mcs'}
+        alt='Hello World!'
+        onClose={this.navigateBack.bind(this)}
       />
     )
+    // return (
+    //   <Lightbox
+    //     mainSrc={filePath}
+    //     onCloseRequest={this.navigateBack.bind(this)}
+    //     onMovePrevRequest={function () {}}
+    //     onMoveNextRequest={function () {}}
+    //     nextSrc={''}
+    //     prevSrc={''}
+    //   />
+    // )
   }
 
   renderFile ({ currentFolder, fullPath, fetched }) {

@@ -53,8 +53,10 @@ bsync.init(
   },
   (err, bs) => {
     if (err) return console.error(err);
+    // console.log(bs)
 
     const browserSyncUrl = getClientUrl(bs.options);
+    console.log(browserSyncUrl)
 
     let child = runElectron(browserSyncUrl);
 
