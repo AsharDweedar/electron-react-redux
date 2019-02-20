@@ -17,11 +17,14 @@ export default handleActions(
           [fullPath]: { status: 'Done', paths: list }
         }
       }
-    },
+    }, 
     [actions.fetchFileDone]: function (
       state,
       { payload: { writePath, fullPath } }
     ) {
+      console.log("inside fetchFileDone ............... ... . . . . . ")
+      console.log(fullPath)
+      console.log(writePath)
       return {
         ...state,
         fetched: {

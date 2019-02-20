@@ -2,15 +2,23 @@ import React, { Component } from 'react'
 import { Document, Page } from 'react-pdf'
 
 export default class ViewPDF extends Component {
-  state = {
-    filepath: this.props.filepath,
-    numPages: null,
-    pageNumber: 1
+  constructor(props) {
+    super(props)
+    console.log("constructor ///////")
+    this.state = {
+      filepath: props.filepath,
+      numPages: null,
+      pageNumber: 1
+    }
+
   }
 
   onDocumentLoad () {}
   render () {
     const { pageNumber, numPages, filepath } = this.state
+    console.log("pageNumber", pageNumber)
+    console.log("numPages", numPages)
+    console.log("filepath", filepath)
 
     return (
       <div>

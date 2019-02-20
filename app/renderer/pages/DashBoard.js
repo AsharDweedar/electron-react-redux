@@ -4,7 +4,8 @@ import Gallery from 'react-grid-gallery'
 import PropTypes from 'prop-types'
 import path from 'path'
 import { isArray } from 'util'
-import { ViewPDF } from '../components/PDFViewer'
+import ViewPDF from '../components/PDFViewer'
+
 export default class DashBoard extends Component {
   constructor (props) {
     super(props)
@@ -19,7 +20,7 @@ export default class DashBoard extends Component {
   createList (paths) {
     let that = this
     let back = []
-    let add_back_button = path.dirname(this.state['currentFolder']) != '.'
+    let add_back_button = path.dirname(this.state['fullPath']) != '.'
 
     if (add_back_button) {
       back = [
@@ -185,18 +186,7 @@ export default class DashBoard extends Component {
     let current = fetched[fullPath] || {}
     return (
       <div>
-        {current['status'] == 'Loading' && (
-          <span
-            style={{
-              border: '1px solid red',
-              display: 'inline-block',
-              margin: 'auto',
-              width: '30%'
-            }}
-          >
-            <Preloader size='big' />
-          </span>
-        )}
+        {current['status'] == 'Loading' && ''}
         {current['status'] == 'Done' && this.renderGallery(current['paths'])}
         {current['status'] == undefined && (
           <span>
@@ -219,14 +209,19 @@ export default class DashBoard extends Component {
 
   renderFile ({ currentFolder, fullPath, fetched }) {
     let { ext } = path.parse(currentFolder)
+    let current = fetched[fullPath] || {}
+    if (current['status'] == 'Loading') return ''
     switch (ext) {
       case '.pdf':
-        return <span>{fetched[fullPath]['file'] || ''}</span>
-      // return <ViewPDF filepath={(fetched[fullPath]['file'] || "")} />
+        console.log('redering PPPPPPPPPPPPPPPDDDDDDDDDDDDDFFFFFFFFFFFFFf')
+        // return <span>{fetched[fullPath]['file'] || ''}</span>
+        console.log(fetched[fullPath]['file'] || '')
+        return <ViewPDF filepath={fetched[fullPath]['file'] || ''} />
       case '.txt':
-        return file.readFile(fetched[fullPath]['file'], function (err, res) {
-          console.log('done reading file')
-        })
+
+      // return file.readFile(fetched[fullPath]['file'], function (err, res) {
+      //   console.log('done reading file')
+      // })
       default:
         return this.viewImage(fetched[fullPath]['file'])
     }
@@ -253,6 +248,19 @@ export default class DashBoard extends Component {
           }}
         >
           {this.renderBreadCrumbs(fullPath, current['status'])}
+          {current['status'] == 'Loading' && (
+            <span
+              style={{
+                border: '1px solid red',
+                display: 'inline-block',
+                margin: 'auto',
+                width: '30%'
+              }}
+            >
+              <Preloader size='big' />
+            </span>
+          )}
+
           {type == 'folder' && this.renderList(this.props.file)}
           {type == 'file' && this.renderFile(this.props.file)}
         </div>

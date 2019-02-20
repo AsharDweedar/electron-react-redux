@@ -22,13 +22,13 @@ function resolver (cb, fullPath) {
 module.exports = {
   ls: function (fullPath) {
     return new Promise(resolve =>
-      setTimeout(() => resolver(resolve, fullPath), 500)
+      setTimeout(() => resolver(resolve, fullPath), 400)
     )
   },
   getFile: function (fullPath) {
     console.log('getting file ')
     return new Promise((resolve, catcher) => {
-      let writePath = path.join(__dirname, fullPath)
+      let writePath = path.join(process.cwd(), fullPath)
       console.log('writePath')
       console.log(JSON.stringify(writePath))
       return fs.mkdir(path.dirname(writePath), function (err, res) {
