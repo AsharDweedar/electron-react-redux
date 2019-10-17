@@ -73,6 +73,14 @@ export default class Floating extends Component {
             className='red'
             onClick={() => router('/dashboard')}
           />
+          <Button
+            tooltip='explorer'
+            tooltipOptions={{ "position": "top", "delay": 10 }}
+            floating
+            icon='insert_chart'
+            className='red'
+            onClick={() => router('/explorer')}
+          />
         </Button>
       </div>
     )

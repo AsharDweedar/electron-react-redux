@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Breadcrumb, MenuItem, Preloader, Button } from 'react-materialize'
 import Gallery from 'react-grid-gallery'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import path from 'path'
 import { isArray } from 'util'
 import ViewPDF from '../components/PDFViewer'
@@ -22,26 +22,26 @@ export default class DashBoard extends Component {
 
   createList (paths) {
     let that = this
-    let back = []
+    let all = []
     let add_back_button = path.dirname(this.state['fullPath']) != '.'
 
     if (add_back_button) {
-      back = [
-        {
-          src: '',
-          thumbnail:
-            'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/links.png',
-          thumbnailWidth: 10,
-          thumbnailHeight: 10,
-          tags: [{ value: 'back', title: 'Name' }]
-        }
-      ]
+      all.push({
+        src: '',
+        thumbnail:
+          'https://cdn0.iconfinder.com/data/icons/sharp_folder_icons_by_folksnet/512/links.png',
+        thumbnailWidth: 10,
+        thumbnailHeight: 10,
+        tags: [{ value: 'back', title: 'Name' }]
+      })
     }
     paths = isArray(paths) ? paths : paths.value
-    return back.concat(
-      (paths || []).map(function ({ key }) {
-        var { name, ext } = path.parse(key)
+    return all.concat(
+      paths.map(function (sth) {
+        console.log(sth)
+        var { name, ext } = path.parse(sth['name'])
         return {
+          alt: sth._id,
           src: '',
           type: ext == '' ? 'folder' : 'file',
           thumbnail:
@@ -57,6 +57,7 @@ export default class DashBoard extends Component {
 
   handleNavigate (ele) {
     let [{ value }] = ele.tags
+    // let id = ele.alt
     var newFullPath = path.join(this.props.file.fullPath, value)
     this.state.currentFolder = value
     this.state.fullPath = newFullPath
@@ -167,28 +168,6 @@ export default class DashBoard extends Component {
     )
   }
 
-  renderBreadCrumbs (fullPath, status) {
-    const statuses = {
-      Loading: 'Loading ...',
-      Failed: 'Failed !!'
-    }
-    if (status == 'Done') {
-      return (
-        <Breadcrumb className='black'>
-          {fullPath.split('/').reduce(function (acc, name) {
-            return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
-          }, [])}
-        </Breadcrumb>
-      )
-    } else {
-      return (
-        <Breadcrumb className='black'>
-          <MenuItem>{statuses[status] || ''}</MenuItem>
-        </Breadcrumb>
-      )
-    }
-  }
-
   renderList ({ currentFolder, fullPath, fetched }) {
     let current = fetched[fullPath] || {}
     return (
@@ -211,12 +190,16 @@ export default class DashBoard extends Component {
   }
 
   viewImage (filePath) {
-    console.log(",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,")
+    console.log(',,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,')
     console.log(filePath)
     return (
       <Lightbox
-        medium={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmfSdorY_1cntjEmgEXNXEJwxGi-nsY9fwJJUgipn3mulH5mcs'}
-        large={'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmfSdorY_1cntjEmgEXNXEJwxGi-nsY9fwJJUgipn3mulH5mcs'}
+        medium={
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmfSdorY_1cntjEmgEXNXEJwxGi-nsY9fwJJUgipn3mulH5mcs'
+        }
+        large={
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmfSdorY_1cntjEmgEXNXEJwxGi-nsY9fwJJUgipn3mulH5mcs'
+        }
         alt='Hello World!'
         onClose={this.navigateBack.bind(this)}
       />
@@ -274,7 +257,7 @@ export default class DashBoard extends Component {
             background: '#EEE'
           }}
         >
-          {this.renderBreadCrumbs(fullPath, current['status'])}
+          <Crumbs fullPath={fullPath} status={current['status']} />
           {current['status'] == 'Loading' && (
             <span
               style={{
@@ -302,3 +285,25 @@ export default class DashBoard extends Component {
 //     fetched: PropTypes.shape({ fetched_paths: PropTypes.array.isRequired })
 //   })
 // }
+
+function Crumbs ({ fullPath, status }) {
+  const statuses = {
+    Loading: 'Loading ...',
+    Failed: 'Failed !!'
+  }
+  if (status == 'Done') {
+    return (
+      <Breadcrumb className='black'>
+        {fullPath.split('/').reduce(function (acc, name) {
+          return acc.concat([<MenuItem key={name}>{name}</MenuItem>])
+        }, [])}
+      </Breadcrumb>
+    )
+  } else {
+    return (
+      <Breadcrumb className='black'>
+        <MenuItem>{statuses[status] || ''}</MenuItem>
+      </Breadcrumb>
+    )
+  }
+}

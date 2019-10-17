@@ -1,7 +1,8 @@
 import { connect } from 'react-redux'
 import path from 'path'
 import { bindActionCreators } from 'redux'
-import * as s3 from '../helpers/s3_fake'
+// import * as s3 from '../helpers/s3_fake'
+import * as s3 from '../helpers/files_browsing_apis'
 
 import fileActions from '../actions/file'
 

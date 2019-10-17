@@ -7,6 +7,7 @@ import FAQ from '../pages/FAQ';
 import Help from '../pages/Help';
 import Policy from '../pages/Policy';
 import DashBoard from './DashBoard';
+import Explorer from './Explorer';
 import Profile from './Profile';
 
 import LoginPage from './LoginPage';
@@ -23,6 +24,7 @@ export default (
         <Route exact path="/home" component={Home} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/dashboard" component={DashBoard} />
+        <Route exact path="/explorer" component={Explorer} />
         <Route exact path="/about" component={About} />
         <Route exact path="/faq" component={FAQ} />
         <Route exact path="/help" component={Help} />
